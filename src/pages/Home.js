@@ -44,7 +44,7 @@ const Home = () => {
             const { CLASS_ID, NAME, SECTION, SUBJECT } = classItem;
             return (
               <Grid item xs={12} md={3} key={CLASS_ID}>
-                <ClassCard name={NAME} section={SECTION} />
+                <ClassCard name={NAME} section={SECTION} id={CLASS_ID} />
               </Grid>
             );
           })}
