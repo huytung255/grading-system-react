@@ -7,10 +7,11 @@ import {
   Button,
   Fade,
   Chip,
+  IconButton,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
 import axiosClient from "../api/axiosClient";
+import SendIcon from "@mui/icons-material/Send";
 const InviteByEmailModal = ({ open, onClose, preSelectedTarget }) => {
   const [input, setInput] = useState("");
   const [target, setTarget] = useState("teacher");
@@ -27,10 +28,14 @@ const InviteByEmailModal = ({ open, onClose, preSelectedTarget }) => {
     }
   }, [open]);
   const enterPressed = (e) => {
-    if (e.keyCode == 13) {
+    if (e.keyCode == 13 && input.length !== 0) {
       setReceivers([...receivers, input]);
       setInput("");
     }
+  };
+  const handleAdd = () => {
+    setReceivers([...receivers, input]);
+    setInput("");
   };
   const removeReceiver = (i) => {
     let newReceivers = [...receivers];
@@ -77,15 +82,25 @@ const InviteByEmailModal = ({ open, onClose, preSelectedTarget }) => {
               To Students
             </Button>
           </Stack>
-          <TextField
-            variant="filled"
-            label={target + "'s email"}
-            InputLabelProps={{ sx: { textTransform: "capitalize" } }}
-            sx={{ width: "100%", mb: 2 }}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={enterPressed}
-          />
+          <Stack direction="row" marginBottom={2} width="100%">
+            <TextField
+              variant="filled"
+              label={target + "'s email"}
+              InputLabelProps={{ sx: { textTransform: "capitalize" } }}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={enterPressed}
+              fullWidth={true}
+            />
+            <Button
+              disabled={input.length === 0}
+              variant="contained"
+              onClick={handleAdd}
+            >
+              Add
+            </Button>
+          </Stack>
+
           <Typography
             sx={{
               fontSize: 14,

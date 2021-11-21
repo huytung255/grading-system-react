@@ -8,6 +8,11 @@ import RequireAuth from "./components/RequireAuth";
 import ClassFeed from "./pages/ClassFeed";
 import ClassParticipants from "./pages/ClassParticipants";
 import AcceptInvitation from "./pages/AcceptInvitation";
+import RequireSignOut from "./components/RequireSignOut";
+import SignUp from "./pages/SignUp";
+import ResetPassword from "./pages/ResetPassword";
+import ErrorSnackbar from "./components/ErrorSnackbar";
+import SuccessSnackbar from "./components/SuccessSnackbar";
 function App() {
   const theme = createTheme({
     palette: {
@@ -27,6 +32,8 @@ function App() {
   });
   return (
     <ThemeProvider theme={theme}>
+      <ErrorSnackbar />
+      <SuccessSnackbar />
       <BrowserRouter>
         <Routes>
           {/* {["/", "class"].map((p, i) => (
@@ -64,7 +71,30 @@ function App() {
               </RequireAuth>
             }
           />
-          <Route path="/sign-in" element={<SignIn />} />
+          <Route
+            path="/sign-in"
+            element={
+              <RequireSignOut>
+                <SignIn />
+              </RequireSignOut>
+            }
+          />
+          <Route
+            path="/sign-up"
+            element={
+              <RequireSignOut>
+                <SignUp />
+              </RequireSignOut>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <RequireSignOut>
+                <ResetPassword />
+              </RequireSignOut>
+            }
+          />
           <Route
             path="/accept-invitation"
             element={

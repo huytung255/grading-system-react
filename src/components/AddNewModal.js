@@ -11,7 +11,11 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import axiosClient from "../api/axiosClient";
 const AddNewModal = ({ open, onClose, fetchAPI }) => {
-  const { handleSubmit, control, formState: errors, getValues } = useForm();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors, isValid },
+  } = useForm({ mode: "all" });
   const onSubmit = async (data) => {
     const res = await axiosClient.post("/classes/add", { ...data });
     if (res.data === "1 record inserted") {
@@ -49,7 +53,7 @@ const AddNewModal = ({ open, onClose, fetchAPI }) => {
               render={({ field }) => {
                 return (
                   <TextField
-                    error={!!errors.class}
+                    error={!!errors.name}
                     variant="outlined"
                     label="Class name"
                     fullWidth={true}
@@ -90,7 +94,12 @@ const AddNewModal = ({ open, onClose, fetchAPI }) => {
             />
 
             <Stack direction="row-reverse" spacing={2} sx={{ mt: 3 }}>
-              <Button variant="text" size="small" type="submit">
+              <Button
+                disabled={!isValid}
+                variant="text"
+                size="small"
+                type="submit"
+              >
                 Create
               </Button>
               <Button

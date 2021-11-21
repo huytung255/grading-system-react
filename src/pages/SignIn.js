@@ -3,115 +3,20 @@ import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { IconButton, createSvgIcon } from "@mui/material";
+
 import { useDispatch } from "react-redux";
 import { setIsAuthenticated } from "../redux/user";
-import { useNavigate, useLocation } from "react-router-dom";
-import ErrorSnackbar from "../components/ErrorSnackbar";
-const GoogleIcon = createSvgIcon(
-  <>
-    <path
-      fill="#EA4335 "
-      d="M5.26620003,9.76452941 C6.19878754,6.93863203 8.85444915,4.90909091 12,4.90909091 C13.6909091,4.90909091 15.2181818,5.50909091 16.4181818,6.49090909 L19.9090909,3 C17.7818182,1.14545455 15.0545455,0 12,0 C7.27006974,0 3.1977497,2.69829785 1.23999023,6.65002441 L5.26620003,9.76452941 Z"
-    />
-    <path
-      fill="#34A853"
-      d="M16.0407269,18.0125889 C14.9509167,18.7163016 13.5660892,19.0909091 12,19.0909091 C8.86648613,19.0909091 6.21911939,17.076871 5.27698177,14.2678769 L1.23746264,17.3349879 C3.19279051,21.2936293 7.26500293,24 12,24 C14.9328362,24 17.7353462,22.9573905 19.834192,20.9995801 L16.0407269,18.0125889 Z"
-    />
-    <path
-      fill="#4A90E2"
-      d="M19.834192,20.9995801 C22.0291676,18.9520994 23.4545455,15.903663 23.4545455,12 C23.4545455,11.2909091 23.3454545,10.5272727 23.1818182,9.81818182 L12,9.81818182 L12,14.4545455 L18.4363636,14.4545455 C18.1187732,16.013626 17.2662994,17.2212117 16.0407269,18.0125889 L19.834192,20.9995801 Z"
-    />
-    <path
-      fill="#FBBC05"
-      d="M5.27698177,14.2678769 C5.03832634,13.556323 4.90909091,12.7937589 4.90909091,12 C4.90909091,11.2182781 5.03443647,10.4668121 5.26620003,9.76452941 L1.23999023,6.65002441 C0.43658717,8.26043162 0,10.0753848 0,12 C0,13.9195484 0.444780743,15.7301709 1.23746264,17.3349879 L5.27698177,14.2678769 Z"
-    />
-  </>,
-  "Google"
-);
-const FacebookIcon = createSvgIcon(
-  <>
-    <g>
-      <path
-        fill="#3B5998"
-        d="M145.659,0c80.45,0,145.66,65.219,145.66,145.66c0,80.45-65.21,145.659-145.66,145.659
-		S0,226.109,0,145.66C0,65.219,65.21,0,145.659,0z"
-      />
-      <path
-        fill="#FFFFFF"
-        d="M163.394,100.277h18.772v-27.73h-22.067v0.1c-26.738,0.947-32.218,15.977-32.701,31.763h-0.055
-		v13.847h-18.207v27.156h18.207v72.793h27.439v-72.793h22.477l4.342-27.156h-26.81v-8.366
-		C154.791,104.556,158.341,100.277,163.394,100.277z"
-      />
-    </g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-  </>,
-  "Facebook"
-);
-const Ruler = () => {
-  return (
-    <Box
-      style={{
-        display: "flex",
-        flexDirection: "row",
-      }}
-    >
-      <Box
-        sx={{
-          borderStyle: "solid",
-          borderWidth: 0,
-          borderBottomWidth: 1,
-          borderBottomColor: "text.secondary",
-          flex: 1,
-          alignSelf: "center",
-          marginRight: 2,
-        }}
-      ></Box>
-      <Typography component="p" variant="p" color="text.secondary">
-        Or sign in with
-      </Typography>
-      <Box
-        sx={{
-          borderStyle: "solid",
-          borderWidth: 0,
-          borderBottomWidth: 1,
-          borderBottomColor: "text.secondary",
-          flex: 1,
-          alignSelf: "center",
-          marginLeft: 2,
-        }}
-      ></Box>
-    </Box>
-  );
-};
-
+import { useNavigate, useLocation, NavLink } from "react-router-dom";
+import SocialAuth from "../components/SocialAuth";
+import MyDivider from "../components/MyDivider";
+import { setErrorMsg, setSuccessMsg } from "../redux/alert";
 export default function SignIn({ location }) {
   const { state } = useLocation();
-
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [error, setError] = useState("");
   let navigate = useNavigate();
   const dispatch = useDispatch();
   const handleSubmit = (event) => {
@@ -122,60 +27,53 @@ export default function SignIn({ location }) {
       dispatch(setIsAuthenticated(true));
       navigate(state ? state.from.pathname : "/");
     } else {
-      setError("Incorrect email or password.");
-      setOpenSnackbar(true);
+      dispatch(setErrorMsg("Incorrect email or password."));
     }
   };
 
   return (
-    <>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <Box
+        sx={{
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Typography
+          component="h1"
+          variant="h3"
           sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            fontWeight: 900,
+            color: "text.secondary",
           }}
         >
-          <Typography
-            component="h1"
-            variant="h3"
-            sx={{
-              fontWeight: 900,
-              color: "text.secondary",
-            }}
-          >
-            SIGN IN
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <FormControlLabel
+          SIGN IN
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+          />
+          {/* <FormControlLabel
               control={
                 <Checkbox value="remember" color="primary" size="small" />
               }
@@ -189,64 +87,47 @@ export default function SignIn({ location }) {
                   Remember me
                 </Typography>
               }
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
-            <Ruler />
-            <Box
-              sx={{
-                marginTop: 1,
-                marginBottom: 5,
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <IconButton sx={{ marginRight: 1 }}>
-                <GoogleIcon sx={{ height: 40, width: 40 }} />
-              </IconButton>
-              <IconButton>
-                <FacebookIcon
-                  viewBox="0 0 291.319 291.319"
-                  sx={{ height: 40, width: 40 }}
-                />
-              </IconButton>
-            </Box>
-            <Grid container>
-              <Grid item xs>
-                <Link
-                  href="#"
-                  variant="body2"
-                  sx={{ fontWeight: 500, textDecoration: "none" }}
-                >
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link
-                  href="#"
-                  variant="body2"
-                  sx={{ fontWeight: 500, textDecoration: "none" }}
-                >
-                  {"Don't have an account? Sign Up."}
-                </Link>
-              </Grid>
+            /> */}
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Sign In
+          </Button>
+          <MyDivider text="Or sign in with" />
+          <SocialAuth />
+          <Grid container>
+            <Grid item xs>
+              <NavLink
+                to="/reset-password"
+                variant="body2"
+                style={{
+                  fontWeight: 500,
+                  textDecoration: "none",
+                  fontSize: 15,
+                }}
+              >
+                Forgot password?
+              </NavLink>
             </Grid>
-          </Box>
+            <Grid item>
+              <NavLink
+                to="/sign-up"
+                variant="body2"
+                style={{
+                  fontWeight: 500,
+                  textDecoration: "none",
+                  fontSize: 15,
+                }}
+              >
+                {"Don't have an account? Sign Up."}
+              </NavLink>
+            </Grid>
+          </Grid>
         </Box>
-      </Container>
-      <ErrorSnackbar
-        open={openSnackbar}
-        setOpen={setOpenSnackbar}
-        msg={error}
-      />
-    </>
+      </Box>
+    </Container>
   );
 }
