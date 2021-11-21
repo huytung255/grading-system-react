@@ -56,7 +56,7 @@ export default function SignUp() {
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={6}>
                 <Controller
                   name="name"
                   control={control}
@@ -78,7 +78,28 @@ export default function SignUp() {
                   }}
                 />
               </Grid>
-
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="phone"
+                  control={control}
+                  defaultValue=""
+                  rules={{ required: true, pattern: "[0-9]" }}
+                  render={({ field }) => {
+                    return (
+                      <TextField
+                        required
+                        type="number"
+                        error={!!errors.phone}
+                        variant="outlined"
+                        label="Phone number"
+                        fullWidth={true}
+                        margin="dense"
+                        {...field}
+                      />
+                    );
+                  }}
+                />
+              </Grid>
               <Grid item xs={12}>
                 <Controller
                   name="email"

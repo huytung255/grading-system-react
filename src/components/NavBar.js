@@ -122,7 +122,14 @@ const NavBar = () => {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleClose}>Profile</MenuItem>
+          <MenuItem onClick={handleClose}>
+            <NavLink
+              to="/user-profile"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              Profile
+            </NavLink>
+          </MenuItem>
           <MenuItem onClick={signOut}>Sign out</MenuItem>
         </Menu>
       </Toolbar>

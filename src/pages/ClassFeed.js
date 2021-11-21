@@ -78,7 +78,6 @@ const ClassFeed = () => {
       <Grid container spacing={3}>
         <Grid item xs={3}>
           <Button
-            variant="outlined"
             startIcon={<LinkIcon />}
             sx={{ width: "100%", fontWeight: 500, mb: 1 }}
             variant="contained"
@@ -87,7 +86,6 @@ const ClassFeed = () => {
             Invite Link
           </Button>
           <Button
-            variant="outlined"
             startIcon={<EmailIcon />}
             sx={{ width: "100%", fontWeight: 500 }}
             variant="contained"

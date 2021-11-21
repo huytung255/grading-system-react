@@ -12,8 +12,33 @@ const Home = () => {
   const handleClose = () => setOpenModal(false);
   async function fetchAPI() {
     try {
-      const res = await axiosClient.get("/classes");
-      setClasses(res.data);
+      // const res = await axiosClient.get("/classes");
+      setClasses([
+        {
+          CLASS_ID: 1,
+          NAME: "Phát triển ứng dụng web nâng cao",
+          SECTION: "PTUDW",
+          SUBJECT: null,
+        },
+        {
+          CLASS_ID: 2,
+          NAME: "Phát triển ứng dụng web",
+          SECTION: "PTUDW",
+          SUBJECT: "PTUDW",
+        },
+        {
+          CLASS_ID: 3,
+          NAME: "Cơ sở dữ liệu",
+          SECTION: "CSDL",
+          SUBJECT: "CSDL",
+        },
+        {
+          CLASS_ID: 4,
+          NAME: "Cơ sở dữ liệu 2",
+          SECTION: "CSDL2",
+          SUBJECT: "CSDL2",
+        },
+      ]);
     } catch (e) {
       console.log(e);
     }

@@ -13,6 +13,7 @@ import SignUp from "./pages/SignUp";
 import ResetPassword from "./pages/ResetPassword";
 import ErrorSnackbar from "./components/ErrorSnackbar";
 import SuccessSnackbar from "./components/SuccessSnackbar";
+import Profile from "./pages/Profile";
 function App() {
   const theme = createTheme({
     palette: {
@@ -68,6 +69,14 @@ function App() {
             element={
               <RequireAuth>
                 <ClassParticipants />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/user-profile"
+            element={
+              <RequireAuth>
+                <Profile />
               </RequireAuth>
             }
           />

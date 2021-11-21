@@ -10,20 +10,14 @@ import {
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import axiosClient from "../api/axiosClient";
-const AddNewModal = ({ open, onClose, fetchAPI }) => {
+const EditProfileModal = ({ open, onClose, name, phone, studentId }) => {
   const {
     handleSubmit,
     control,
     formState: { errors, isValid },
   } = useForm({ mode: "all" });
-  const onSubmit = async (data) => {
-    // const res = await axiosClient.post("/classes/add", { ...data });
-    // if (res.data === "1 record inserted") {
-    //   fetchAPI();
-    //   onClose();
-    // }
-    fetchAPI();
-    onClose();
+  const onSubmit = (data) => {
+    console.log(data);
   };
 
   return (
@@ -44,13 +38,13 @@ const AddNewModal = ({ open, onClose, fetchAPI }) => {
           }}
         >
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, mb: 1 }}>
-            Create class
+            Edit Profile
           </Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Controller
               name="name"
               control={control}
-              defaultValue=""
+              defaultValue={name}
               shouldUnregister={true}
               rules={{ required: true }}
               render={({ field }) => {
@@ -58,7 +52,7 @@ const AddNewModal = ({ open, onClose, fetchAPI }) => {
                   <TextField
                     error={!!errors.name}
                     variant="outlined"
-                    label="Class name"
+                    label="Name"
                     fullWidth={true}
                     margin="dense"
                     required={true}
@@ -68,29 +62,36 @@ const AddNewModal = ({ open, onClose, fetchAPI }) => {
               }}
             />
             <Controller
-              name="section"
+              name="phone"
               control={control}
-              defaultValue=""
+              defaultValue={phone}
               shouldUnregister={true}
+              rules={{ required: true, pattern: "[0-9]" }}
               render={({ field }) => (
                 <TextField
+                  error={!!errors.phone}
+                  type="number"
                   variant="outlined"
-                  label="Section"
+                  label="Phone number"
                   fullWidth={true}
                   margin="dense"
+                  required={true}
                   {...field}
                 />
               )}
             />
             <Controller
-              name="subject"
+              name="studentId"
               control={control}
-              defaultValue=""
+              defaultValue={studentId}
               shouldUnregister={true}
+              rules={{ pattern: "[0-9]" }}
               render={({ field }) => (
                 <TextField
+                  error={!!errors.studentId}
+                  type="number"
                   variant="outlined"
-                  label="Subject"
+                  label="Student ID"
                   fullWidth={true}
                   margin="dense"
                   {...field}
@@ -105,7 +106,7 @@ const AddNewModal = ({ open, onClose, fetchAPI }) => {
                 size="small"
                 type="submit"
               >
-                Create
+                Edit
               </Button>
               <Button
                 variant="text"
@@ -123,4 +124,4 @@ const AddNewModal = ({ open, onClose, fetchAPI }) => {
   );
 };
 
-export default AddNewModal;
+export default EditProfileModal;

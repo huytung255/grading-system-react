@@ -9,21 +9,22 @@ import {
 } from "@mui/material";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { setErrorMsg } from "../redux/alert";
 import axiosClient from "../api/axiosClient";
-const AddNewModal = ({ open, onClose, fetchAPI }) => {
+const ChangePasswordModal = ({ open, onClose }) => {
+  const dispatch = useDispatch();
   const {
     handleSubmit,
     control,
     formState: { errors, isValid },
   } = useForm({ mode: "all" });
-  const onSubmit = async (data) => {
-    // const res = await axiosClient.post("/classes/add", { ...data });
-    // if (res.data === "1 record inserted") {
-    //   fetchAPI();
-    //   onClose();
-    // }
-    fetchAPI();
-    onClose();
+  const onSubmit = (data) => {
+    if (data.newPassword !== data.retypeNewPassword) {
+      dispatch(setErrorMsg("Password and retype password does not match."));
+    } else {
+      console.log(data);
+    }
   };
 
   return (
@@ -44,11 +45,11 @@ const AddNewModal = ({ open, onClose, fetchAPI }) => {
           }}
         >
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, mb: 1 }}>
-            Create class
+            Change Password
           </Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Controller
-              name="name"
+              name="oldPassword"
               control={control}
               defaultValue=""
               shouldUnregister={true}
@@ -56,9 +57,10 @@ const AddNewModal = ({ open, onClose, fetchAPI }) => {
               render={({ field }) => {
                 return (
                   <TextField
-                    error={!!errors.name}
+                    error={!!errors.oldPassword}
+                    type="password"
                     variant="outlined"
-                    label="Class name"
+                    label="Old Password"
                     fullWidth={true}
                     margin="dense"
                     required={true}
@@ -68,34 +70,47 @@ const AddNewModal = ({ open, onClose, fetchAPI }) => {
               }}
             />
             <Controller
-              name="section"
+              name="newPassword"
               control={control}
               defaultValue=""
               shouldUnregister={true}
-              render={({ field }) => (
-                <TextField
-                  variant="outlined"
-                  label="Section"
-                  fullWidth={true}
-                  margin="dense"
-                  {...field}
-                />
-              )}
+              rules={{ required: true, minLength: 8 }}
+              render={({ field }) => {
+                return (
+                  <TextField
+                    error={!!errors.newPassword}
+                    helperText="Password must be at least 8 characters."
+                    type="password"
+                    variant="outlined"
+                    label="New Password"
+                    fullWidth={true}
+                    margin="dense"
+                    required={true}
+                    {...field}
+                  />
+                );
+              }}
             />
             <Controller
-              name="subject"
+              name="retypeNewPassword"
               control={control}
               defaultValue=""
               shouldUnregister={true}
-              render={({ field }) => (
-                <TextField
-                  variant="outlined"
-                  label="Subject"
-                  fullWidth={true}
-                  margin="dense"
-                  {...field}
-                />
-              )}
+              rules={{ required: true }}
+              render={({ field }) => {
+                return (
+                  <TextField
+                    error={!!errors.retypeNewPassword}
+                    type="password"
+                    variant="outlined"
+                    label="Retype New Password"
+                    fullWidth={true}
+                    margin="dense"
+                    required={true}
+                    {...field}
+                  />
+                );
+              }}
             />
 
             <Stack direction="row-reverse" spacing={2} sx={{ mt: 3 }}>
@@ -105,7 +120,7 @@ const AddNewModal = ({ open, onClose, fetchAPI }) => {
                 size="small"
                 type="submit"
               >
-                Create
+                Change
               </Button>
               <Button
                 variant="text"
@@ -123,4 +138,4 @@ const AddNewModal = ({ open, onClose, fetchAPI }) => {
   );
 };
 
-export default AddNewModal;
+export default ChangePasswordModal;
