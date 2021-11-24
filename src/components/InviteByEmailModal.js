@@ -47,12 +47,14 @@ const InviteByEmailModal = ({ open, onClose, preSelectedTarget, classId }) => {
   };
   async function handleInvite() {
     try {
+      setLoading(true);
       const res = await axiosClient.post(
         "/api/classes/" + classId + "/invite-" + target + "s",
         {
           emails: receivers,
         }
       );
+      setLoading(false);
       const { message } = res.data;
       dispatch(setSuccessMsg(message));
       onClose();
