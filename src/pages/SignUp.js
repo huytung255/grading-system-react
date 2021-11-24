@@ -13,9 +13,11 @@ import { Controller, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { setErrorMsg, setSuccessMsg } from "../redux/alert";
 import axiosClient from "../api/axiosClient";
+import LoadingButton from "@mui/lab/LoadingButton";
 export default function SignUp() {
   const dispatch = useDispatch();
   let navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const {
     handleSubmit,
     control,
@@ -24,8 +26,9 @@ export default function SignUp() {
   const onSubmit = async (data) => {
     if (data.password === data.confirmPassword) {
       try {
+        setLoading(true);
         const res = await axiosClient.post("/api/register", { ...data });
-        console.log(res.data);
+        setLoading(false);
         const { message } = res.data.message;
         dispatch(setSuccessMsg(message));
         navigate("/sign-in");
@@ -183,14 +186,15 @@ export default function SignUp() {
                 />
               </Grid>
             </Grid>
-            <Button
+            <LoadingButton
+              loading={loading}
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
               Sign Up
-            </Button>
+            </LoadingButton>
             <MyDivider text="Or sign up with" />
             <SocialAuth />
             <Grid container justifyContent="flex-end" marginBottom={5}>

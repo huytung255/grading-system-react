@@ -8,7 +8,7 @@ import Box from "@mui/material/Box";
 
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-
+import LoadingButton from "@mui/lab/LoadingButton/LoadingButton";
 import { useDispatch } from "react-redux";
 import { setIsAuthenticated, setToken } from "../redux/user";
 import { useNavigate, useLocation, NavLink } from "react-router-dom";
@@ -20,16 +20,19 @@ import useQuery from "../hooks/useQuery";
 export default function SignIn() {
   let query = useQuery();
   const { state } = useLocation();
+  const [loading, setLoading] = useState(false);
   let navigate = useNavigate();
   const dispatch = useDispatch();
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     try {
+      setLoading(true);
       const res = await axiosClient.post("/api/login", {
         email: data.get("email"),
         password: data.get("password"),
       });
+      setLoading(false);
       const { token } = res.data;
       localStorage.setItem("token", token);
       dispatch(setToken(token));
@@ -113,14 +116,15 @@ export default function SignIn() {
                 </Typography>
               }
             /> */}
-          <Button
+          <LoadingButton
             type="submit"
+            loading={loading}
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
             Sign In
-          </Button>
+          </LoadingButton>
           <MyDivider text="Or sign in with" />
           <SocialAuth
             pathname={state ? state.from.pathname : "/"}
