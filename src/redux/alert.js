@@ -5,6 +5,8 @@ const initialState = {
   isSuccess: false,
   errorMsg: "",
   successMsg: "",
+  errorKey: "",
+  successKey: "",
 };
 export const alertSlice = createSlice({
   name: "alert",
@@ -18,14 +20,28 @@ export const alertSlice = createSlice({
     },
     setErrorMsg: (state, action) => {
       state.errorMsg = action.payload;
+      state.errorKey = new Date().getTime();
       state.isError = true;
     },
     setSuccessMsg: (state, action) => {
       state.successMsg = action.payload;
+      state.errorKey = new Date().getTime();
       state.isSuccess = true;
+    },
+    resetError: (state, action) => {
+      state.errorMsg = action.payload;
+    },
+    resetSuccess: (state, action) => {
+      state.successMsg = action.payload;
     },
   },
 });
-export const { setIsError, setIsSuccess, setErrorMsg, setSuccessMsg } =
-  alertSlice.actions;
+export const {
+  setIsError,
+  setIsSuccess,
+  setErrorMsg,
+  setSuccessMsg,
+  resetError,
+  resetSuccess,
+} = alertSlice.actions;
 export default alertSlice.reducer;
