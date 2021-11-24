@@ -52,6 +52,7 @@ const AddNewModal = ({
       fetchAPI();
       onClose();
     } catch (error) {
+      setLoading(false);
       if (error.response) {
         dispatch(setErrorMsg(error.response.data));
       } else console.log(error);

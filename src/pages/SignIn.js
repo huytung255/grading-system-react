@@ -48,6 +48,7 @@ export default function SignIn() {
         navigate("/");
       }
     } catch (error) {
+      setLoading(false);
       if (error.response) {
         dispatch(setErrorMsg(error.response.data.message));
       } else console.log(error);

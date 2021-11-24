@@ -33,6 +33,7 @@ export default function SignUp() {
         dispatch(setSuccessMsg(message));
         navigate("/sign-in");
       } catch (error) {
+        setLoading(false);
         if (error.response) {
           dispatch(setErrorMsg(error.response.data.message));
         } else console.log(error);

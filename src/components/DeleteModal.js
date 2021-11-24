@@ -18,6 +18,7 @@ const DeleteModal = ({ open, onClose, classId }) => {
       onClose();
       navigate("/");
     } catch (error) {
+      setLoading(false);
       if (error.response) {
         dispatch(setErrorMsg(error.response.data));
       } else console.log(error);

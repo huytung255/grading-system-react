@@ -59,6 +59,7 @@ const InviteByEmailModal = ({ open, onClose, preSelectedTarget, classId }) => {
       dispatch(setSuccessMsg(message));
       onClose();
     } catch (error) {
+      setLoading(false);
       if (error.response) {
         dispatch(setErrorMsg(error.response.data.message));
       } else console.log(error);
