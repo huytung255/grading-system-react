@@ -10,14 +10,37 @@ import {
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import axiosClient from "../api/axiosClient";
-const EditProfileModal = ({ open, onClose, name, phone, studentId }) => {
+import { setErrorMsg, setSuccessMsg } from "../redux/alert";
+import { useDispatch } from "react-redux";
+const EditProfileModal = ({
+  open,
+  onClose,
+  fetchAPI,
+  name,
+  phone,
+  studentId,
+}) => {
+  const dispatch = useDispatch();
   const {
     handleSubmit,
     control,
     formState: { errors, isValid },
   } = useForm({ mode: "all" });
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      const res = await axiosClient.post("/api/users/dashboard", {
+        name: data.name,
+        phone: data.phone,
+        student_id: data.studentId,
+      });
+      dispatch(setSuccessMsg(res.data.message));
+      fetchAPI();
+      onClose();
+    } catch (error) {
+      if (error.response) {
+        dispatch(setErrorMsg(error.response.data.message));
+      } else console.log(error);
+    }
   };
 
   return (

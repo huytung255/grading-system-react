@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Container,
@@ -12,13 +12,47 @@ import EditIcon from "@mui/icons-material/Edit";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import EditProfileModal from "../components/EditProfileModal";
 import ChangePasswordModal from "../components/ChangePasswordModal";
+import { setErrorMsg, setSuccessMsg } from "../redux/alert";
+import { useDispatch } from "react-redux";
+import axiosClient from "../api/axiosClient";
 const Profile = () => {
+  const dispatch = useDispatch();
   const [openEdit, setOpenEdit] = useState(false);
   const [openChangePassword, setOpenChangePassword] = useState(false);
+  const [userInfo, setUserInfo] = useState({
+    name: "",
+    phone: "",
+    studentId: "",
+    email: "",
+    image: "",
+    registerType: "",
+  });
   const handleOpenEdit = () => setOpenEdit(true);
   const handleCloseEdit = () => setOpenEdit(false);
   const handleOpenChangePassword = () => setOpenChangePassword(true);
   const handleCloseChangePassword = () => setOpenChangePassword(false);
+  async function fetchAPI() {
+    try {
+      const res = await axiosClient.get("/api/users/dashboard");
+      const { name, phone, student_id, email, registerType, image } =
+        res.data.user;
+      setUserInfo({
+        name: name,
+        phone: phone,
+        studentId: student_id,
+        email: email,
+        image: image,
+        registerType: registerType,
+      });
+    } catch (error) {
+      if (error.response) {
+        dispatch(setErrorMsg(error.response.data));
+      } else console.log(error);
+    }
+  }
+  useEffect(() => {
+    fetchAPI();
+  }, []);
   return (
     <Container
       sx={{
@@ -29,10 +63,12 @@ const Profile = () => {
       <Grid container spacing={10}>
         <Grid item xs={12} sm={3}>
           <Avatar
-            alt="Remy Sharp"
-            src="https://i.pravatar.cc/300"
-            sx={{ width: "100%", height: "auto" }}
-          />
+            alt={userInfo.name}
+            src={userInfo.image}
+            sx={{ width: 150, height: 150 }}
+          >
+            {userInfo.name.charAt(0)}
+          </Avatar>
         </Grid>
         <Grid container spacing={3} item xs={12} sm={9}>
           <Grid item xs={12} alignItems="center" display="flex">
@@ -60,7 +96,7 @@ const Profile = () => {
               label="Name"
               fullWidth={true}
               margin="dense"
-              value={"Some name"}
+              value={userInfo.name}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -71,7 +107,7 @@ const Profile = () => {
               label="Phone number"
               fullWidth={true}
               margin="dense"
-              value={"123456789"}
+              value={userInfo.phone ? userInfo.phone : ""}
             />
           </Grid>
           <Grid item xs={12}>
@@ -82,7 +118,7 @@ const Profile = () => {
               label="Student ID"
               fullWidth={true}
               margin="dense"
-              value={"18000000"}
+              value={userInfo.studentId ? userInfo.studentId : ""}
             />
           </Grid>
           <Grid item xs={12}>
@@ -92,8 +128,28 @@ const Profile = () => {
               label="Email Address"
               fullWidth={true}
               margin="dense"
-              value="example@gmail.com"
+              value={userInfo.email}
             />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            {userInfo.registerType === "registered" ? (
+              <>
+                <Button
+                  variant="contained"
+                  sx={{ width: "100%" }}
+                  startIcon={<VpnKeyIcon />}
+                  onClick={handleOpenChangePassword}
+                >
+                  Change password
+                </Button>
+                <ChangePasswordModal
+                  open={openChangePassword}
+                  onClose={handleCloseChangePassword}
+                />
+              </>
+            ) : (
+              <></>
+            )}
           </Grid>
           <Grid item xs={12} sm={6}>
             <Button
@@ -107,23 +163,10 @@ const Profile = () => {
             <EditProfileModal
               open={openEdit}
               onClose={handleCloseEdit}
-              name="Some name"
-              phone={"123456789"}
-              studentId={""}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Button
-              variant="contained"
-              sx={{ width: "100%" }}
-              startIcon={<VpnKeyIcon />}
-              onClick={handleOpenChangePassword}
-            >
-              Change password
-            </Button>
-            <ChangePasswordModal
-              open={openChangePassword}
-              onClose={handleCloseChangePassword}
+              fetchAPI={fetchAPI}
+              name={userInfo.name}
+              phone={userInfo.phone}
+              studentId={userInfo.studentId}
             />
           </Grid>
         </Grid>

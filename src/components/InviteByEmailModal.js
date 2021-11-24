@@ -7,17 +7,17 @@ import {
   Button,
   Fade,
   Chip,
-  IconButton,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import axiosClient from "../api/axiosClient";
-import SendIcon from "@mui/icons-material/Send";
-const InviteByEmailModal = ({ open, onClose, preSelectedTarget }) => {
+import { setErrorMsg, setSuccessMsg } from "../redux/alert";
+import { useDispatch } from "react-redux";
+const InviteByEmailModal = ({ open, onClose, preSelectedTarget, classId }) => {
+  const dispatch = useDispatch();
   const [input, setInput] = useState("");
   const [target, setTarget] = useState("teacher");
   const [receivers, setReceivers] = useState([]);
   useEffect(() => {
-    console.log(preSelectedTarget);
     if (preSelectedTarget) setTarget(preSelectedTarget);
   }, [preSelectedTarget]);
   useEffect(() => {
@@ -27,6 +27,7 @@ const InviteByEmailModal = ({ open, onClose, preSelectedTarget }) => {
       setReceivers([]);
     }
   }, [open]);
+
   const enterPressed = (e) => {
     if (e.keyCode == 13 && input.length !== 0) {
       setReceivers([...receivers, input]);
@@ -42,6 +43,23 @@ const InviteByEmailModal = ({ open, onClose, preSelectedTarget }) => {
     newReceivers.splice(i, 1);
     setReceivers([...newReceivers]);
   };
+  async function handleInvite() {
+    try {
+      const res = await axiosClient.post(
+        "/api/classes/" + classId + "/invite-" + target + "s",
+        {
+          emails: receivers,
+        }
+      );
+      const { message } = res.data;
+      dispatch(setSuccessMsg(message));
+      onClose();
+    } catch (error) {
+      if (error.response) {
+        dispatch(setErrorMsg(error.response.data));
+      } else console.log(error);
+    }
+  }
   return (
     <Modal open={open} onClose={onClose}>
       <Fade in={open}>
@@ -129,6 +147,7 @@ const InviteByEmailModal = ({ open, onClose, preSelectedTarget }) => {
               variant="text"
               size="small"
               disabled={receivers.length === 0 ? true : false}
+              onClick={handleInvite}
             >
               Invite
             </Button>

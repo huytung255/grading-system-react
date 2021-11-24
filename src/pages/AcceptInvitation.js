@@ -1,22 +1,38 @@
 import { CircularProgress, Container, Stack, Typography } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import React, { useEffect } from "react";
+import { setErrorMsg, setSuccessMsg } from "../redux/alert";
+import { useDispatch } from "react-redux";
+import axiosClient from "../api/axiosClient";
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 const AcceptInvitation = () => {
   const navigate = useNavigate();
   const query = useQuery();
+  const dispatch = useDispatch();
+  async function joinClass(classId, type, code) {
+    try {
+      const res = await axiosClient.get(
+        "/api/classes/" + classId + "/join?" + type + "=" + code
+      );
+      dispatch(setSuccessMsg(res.data.message));
+      navigate("/class/" + classId + "/feed");
+    } catch (error) {
+      if (error.response) {
+        dispatch(setErrorMsg(error.response.data.message));
+      } else console.log(error);
+    }
+  }
   useEffect(() => {
     const classId = query.get("classID");
-    const itcode = query.get("itcode");
-    let timer1 = setTimeout(
-      () => navigate("/class/" + classId + "/feed"),
-      1500
-    );
-    return () => {
-      clearTimeout(timer1);
-    };
+    const tjc = query.get("tjc");
+    const sjc = query.get("sjc");
+    if (tjc) {
+      joinClass(classId, "tjc", tjc);
+    } else if (sjc) {
+      joinClass(classId, "sjc", sjc);
+    }
   }, []);
   return (
     <Stack

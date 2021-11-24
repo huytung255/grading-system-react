@@ -1,5 +1,8 @@
 import React from "react";
-import { Box, IconButton, createSvgIcon, Typography } from "@mui/material";
+import { Box, IconButton, createSvgIcon } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { setIsAuthenticated, setToken } from "../redux/user";
+import { useNavigate } from "react-router-dom";
 const GoogleIcon = createSvgIcon(
   <>
     <path
@@ -55,7 +58,51 @@ const FacebookIcon = createSvgIcon(
   "Facebook"
 );
 
-const SocialAuth = () => {
+const SocialAuth = ({ pathname, search }) => {
+  let navigate = useNavigate();
+  const dispatch = useDispatch();
+  const messageFn = (event) => {
+    try {
+      if (event.data.token) {
+        window.removeEventListener("message", messageFn);
+        const { token } = event.data;
+        localStorage.setItem("token", token);
+        dispatch(setToken(token));
+        dispatch(setIsAuthenticated(true));
+        if (search === "") {
+          navigate(pathname);
+        } else {
+          navigate({
+            pathname: pathname,
+            search: search,
+          });
+        }
+      }
+    } catch (e) {
+      // do nothing
+      console.error(e);
+    }
+  };
+  const openAuthorizePopUp = (method) => {
+    window.addEventListener("message", messageFn);
+    const url = process.env.REACT_APP_SERVER_URL + "/api/auth/" + method;
+    const width = 450,
+      height = 730,
+      left = window.screen.width / 2 - width / 2,
+      top = window.screen.height / 2 - height / 2;
+    window.open(
+      url,
+      "Authorize",
+      "menubar=no,location=no,resizable=no,scrollbars=no,status=no, width=" +
+        width +
+        ", height=" +
+        height +
+        ", top=" +
+        top +
+        ", left=" +
+        left
+    );
+  };
   return (
     <Box
       sx={{
@@ -67,10 +114,13 @@ const SocialAuth = () => {
         justifyContent: "center",
       }}
     >
-      <IconButton sx={{ marginRight: 1 }}>
+      <IconButton
+        sx={{ marginRight: 1 }}
+        onClick={() => openAuthorizePopUp("google")}
+      >
         <GoogleIcon sx={{ height: 40, width: 40 }} />
       </IconButton>
-      <IconButton>
+      <IconButton onClick={() => openAuthorizePopUp("facebook")}>
         <FacebookIcon
           viewBox="0 0 291.319 291.319"
           sx={{ height: 40, width: 40 }}

@@ -7,12 +7,35 @@ import {
   Paper,
   IconButton,
 } from "@mui/material";
-import React from "react";
-import { Controller, useForm } from "react-hook-form";
+import React, { useState, useEffect } from "react";
 import axiosClient from "../api/axiosClient";
 import AssignmentIcon from "@mui/icons-material/Assignment";
-const InviteLinkModal = ({ open, onClose }) => {
-  //   const { handleSubmit, control, formState: errors, getValues } = useForm();
+import { setErrorMsg } from "../redux/alert";
+import { useDispatch } from "react-redux";
+
+const InviteLinkModal = ({ open, onClose, classId }) => {
+  const dispatch = useDispatch();
+  const [inviteStudent, setInviteStudent] = useState("");
+  const [inviteTeacher, setInviteTeacher] = useState("");
+  async function fetchAPI() {
+    try {
+      const res = await axiosClient.get(
+        "/api/classes/" + classId + "/get-teacher-join-link"
+      );
+      setInviteTeacher(res.data.joinLink);
+      const res2 = await axiosClient.get(
+        "/api/classes/" + classId + "/get-student-join-link"
+      );
+      setInviteStudent(res2.data.joinLink);
+    } catch (error) {
+      if (error.response) {
+        dispatch(setErrorMsg(error.response.data));
+      } else console.log(error);
+    }
+  }
+  useEffect(() => {
+    fetchAPI();
+  }, []);
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -47,16 +70,13 @@ const InviteLinkModal = ({ open, onClose }) => {
               }}
               elevation={0}
             >
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi,
-              voluptatum optio. Ad similique accusamus ab iure, ratione omnis,
-              labore maxime suscipit laudantium cumque autem qui voluptas magni,
-              iste eius dolor?
+              {inviteTeacher}
             </Paper>
             <IconButton
               color="primary"
               sx={{ ml: 1 }}
               onClick={() => {
-                navigator.clipboard.writeText("Teacher");
+                navigator.clipboard.writeText(inviteTeacher);
               }}
             >
               <AssignmentIcon />
@@ -78,16 +98,13 @@ const InviteLinkModal = ({ open, onClose }) => {
               }}
               elevation={0}
             >
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi,
-              voluptatum optio. Ad similique accusamus ab iure, ratione omnis,
-              labore maxime suscipit laudantium cumque autem qui voluptas magni,
-              iste eius dolor?
+              {inviteStudent}
             </Paper>
             <IconButton
               color="primary"
               sx={{ ml: 1 }}
               onClick={() => {
-                navigator.clipboard.writeText("Student");
+                navigator.clipboard.writeText(inviteStudent);
               }}
             >
               <AssignmentIcon />

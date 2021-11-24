@@ -5,42 +5,22 @@ import React, { useEffect, useState } from "react";
 import axiosClient from "../api/axiosClient";
 import AddNewModal from "../components/AddNewModal";
 import ClassCard from "../components/ClassCard";
+import { setErrorMsg } from "../redux/alert";
+import { useDispatch } from "react-redux";
 const Home = () => {
+  const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
   const [classes, setClasses] = useState([]);
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
   async function fetchAPI() {
     try {
-      // const res = await axiosClient.get("/classes");
-      setClasses([
-        {
-          CLASS_ID: 1,
-          NAME: "Phát triển ứng dụng web nâng cao",
-          SECTION: "PTUDW",
-          SUBJECT: null,
-        },
-        {
-          CLASS_ID: 2,
-          NAME: "Phát triển ứng dụng web",
-          SECTION: "PTUDW",
-          SUBJECT: "PTUDW",
-        },
-        {
-          CLASS_ID: 3,
-          NAME: "Cơ sở dữ liệu",
-          SECTION: "CSDL",
-          SUBJECT: "CSDL",
-        },
-        {
-          CLASS_ID: 4,
-          NAME: "Cơ sở dữ liệu 2",
-          SECTION: "CSDL2",
-          SUBJECT: "CSDL2",
-        },
-      ]);
-    } catch (e) {
-      console.log(e);
+      const res = await axiosClient.get("/api/classes");
+      setClasses([...res.data]);
+    } catch (error) {
+      if (error.response) {
+        dispatch(setErrorMsg(error.response.data));
+      } else console.log(error);
     }
   }
   useEffect(() => {
@@ -63,13 +43,26 @@ const Home = () => {
           open={openModal}
           onClose={handleClose}
           fetchAPI={fetchAPI}
+          isEditing={false}
         />
         <Grid container spacing={2}>
           {classes.map((classItem) => {
-            const { CLASS_ID, NAME, SECTION, SUBJECT } = classItem;
+            const {
+              id,
+              className,
+              classSection,
+              subject,
+              room,
+              usersclasses: { role },
+            } = classItem;
             return (
-              <Grid item xs={12} md={3} key={CLASS_ID}>
-                <ClassCard name={NAME} section={SECTION} id={CLASS_ID} />
+              <Grid item xs={12} md={3} key={id}>
+                <ClassCard
+                  name={className}
+                  section={classSection}
+                  id={id}
+                  role={role}
+                />
               </Grid>
             );
           })}

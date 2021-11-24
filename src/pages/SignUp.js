@@ -6,24 +6,36 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import SocialAuth from "../components/SocialAuth";
 import MyDivider from "../components/MyDivider";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { setErrorMsg, setSuccessMsg } from "../redux/alert";
+import axiosClient from "../api/axiosClient";
 export default function SignUp() {
   const dispatch = useDispatch();
+  let navigate = useNavigate();
   const {
     handleSubmit,
     control,
     formState: { errors, isValid },
   } = useForm({ mode: "all" });
   const onSubmit = async (data) => {
-    if (data.password === data.retypePassword) {
-      console.log(data);
+    if (data.password === data.confirmPassword) {
+      try {
+        const res = await axiosClient.post("/api/register", { ...data });
+        console.log(res.data);
+        const { message } = res.data.message;
+        dispatch(setSuccessMsg(message));
+        navigate("/sign-in");
+      } catch (error) {
+        if (error.response) {
+          dispatch(setErrorMsg(error.response.data.message));
+        } else console.log(error);
+      }
     } else {
-      dispatch(setErrorMsg("Password and retype password does not match."));
+      dispatch(setErrorMsg("Password and confirm password does not match."));
     }
   };
 
@@ -68,7 +80,7 @@ export default function SignUp() {
                         required
                         error={!!errors.name}
                         variant="outlined"
-                        label="Name"
+                        label="Full Name"
                         fullWidth={true}
                         margin="dense"
                         autoFocus
@@ -150,7 +162,7 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <Controller
-                  name="retypePassword"
+                  name="confirmPassword"
                   control={control}
                   defaultValue=""
                   rules={{ required: true, minLength: 8 }}
@@ -158,9 +170,9 @@ export default function SignUp() {
                     return (
                       <TextField
                         required
-                        error={!!errors.retypePassword}
+                        error={!!errors.confirmPassword}
                         variant="outlined"
-                        label="Retype Password"
+                        label="Confirm Password"
                         fullWidth={true}
                         margin="dense"
                         type="password"

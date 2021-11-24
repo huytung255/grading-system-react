@@ -1,11 +1,25 @@
-import { Container, Paper, Stack, Box, IconButton } from "@mui/material";
+import { Container, Paper, Stack, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Typography, Avatar } from "@mui/material";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import InviteByEmailModal from "../components/InviteByEmailModal";
-
+import { setErrorMsg } from "../redux/alert";
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import axiosClient from "../api/axiosClient";
 const ClassParticipants = () => {
+  const { classId } = useParams();
+  const dispatch = useDispatch();
   const [target, setTarget] = useState("teacher");
+  const [role, setRole] = useState("student");
+  const [students, setStudents] = useState({
+    list: [],
+    total: 0,
+  });
+  const [teachers, setTeachers] = useState({
+    list: [],
+    total: 0,
+  });
   const [openInviteByEmail, setOpenInviteByEmail] = useState(false);
   const handleOpenInviteByEmail = (target) => {
     setOpenInviteByEmail(true);
@@ -15,6 +29,32 @@ const ClassParticipants = () => {
     setOpenInviteByEmail(false);
     setTarget(target);
   };
+  async function fetchAPI() {
+    try {
+      const res = await axiosClient.get("/api/classes/" + classId);
+      const { userRole } = res.data;
+      console.log(res);
+      setRole(userRole);
+      const res2 = await axiosClient.get("/api/classes/" + classId + "/people");
+      console.log(res2);
+      const { students, teachers } = res2.data;
+      setStudents({
+        list: [...students.students_list],
+        total: students.total,
+      });
+      setTeachers({
+        list: [...teachers.teachers_list],
+        total: teachers.total,
+      });
+    } catch (error) {
+      if (error.response) {
+        dispatch(setErrorMsg(error.response.data));
+      } else console.log(error);
+    }
+  }
+  useEffect(() => {
+    fetchAPI();
+  }, []);
   return (
     <Container
       sx={{
@@ -37,15 +77,19 @@ const ClassParticipants = () => {
           color="primary.main"
           sx={{ fontWeight: "500", flexGrow: 1 }}
         >
-          Teachers
+          {teachers.total} Teachers
         </Typography>
+        {role === "teacher" ? (
+          <IconButton
+            color="primary"
+            onClick={() => handleOpenInviteByEmail("teacher")}
+          >
+            <GroupAddIcon />
+          </IconButton>
+        ) : (
+          <></>
+        )}
 
-        <IconButton
-          color="primary"
-          onClick={() => handleOpenInviteByEmail("teacher")}
-        >
-          <GroupAddIcon />
-        </IconButton>
         <InviteByEmailModal
           open={openInviteByEmail}
           onClose={handleCloseInviteByEmail}
@@ -53,36 +97,29 @@ const ClassParticipants = () => {
         />
       </Stack>
       <Paper sx={{ p: 2 }} elevation={0}>
-        <Stack direction="row" alignItems="center" marginBottom={1}>
-          <Avatar
-            alt="Remy Sharp"
-            src="https://i.pravatar.cc/300"
-            sx={{ width: 45, height: 45 }}
-          />
-          <Typography
-            sx={{
-              fontWeight: 500,
-              marginLeft: 2,
-            }}
-          >
-            Remy Sharp
-          </Typography>
-        </Stack>
-        <Stack direction="row" alignItems="center" marginBottom={1}>
-          <Avatar
-            alt="Remy Sharp"
-            src="https://i.pravatar.cc/300"
-            sx={{ width: 45, height: 45 }}
-          />
-          <Typography
-            sx={{
-              fontWeight: 500,
-              marginLeft: 2,
-            }}
-          >
-            Remy Sharp
-          </Typography>
-        </Stack>
+        {teachers.list.map((teacher) => {
+          const { id, name, image } = teacher;
+          return (
+            <Stack
+              direction="row"
+              alignItems="center"
+              marginBottom={2}
+              key={id}
+            >
+              <Avatar alt={name} src={image} sx={{ width: 45, height: 45 }}>
+                {name.charAt(0)}
+              </Avatar>
+              <Typography
+                sx={{
+                  fontWeight: 500,
+                  marginLeft: 2,
+                }}
+              >
+                {name}
+              </Typography>
+            </Stack>
+          );
+        })}
       </Paper>
       <Stack
         direction="row"
@@ -99,47 +136,44 @@ const ClassParticipants = () => {
           color="primary.main"
           sx={{ fontWeight: "500", flexGrow: 1 }}
         >
-          Students
+          {students.total} Students
         </Typography>
 
-        <IconButton
-          color="primary"
-          onClick={() => handleOpenInviteByEmail("student")}
-        >
-          <GroupAddIcon />
-        </IconButton>
+        {role === "teacher" ? (
+          <IconButton
+            color="primary"
+            onClick={() => handleOpenInviteByEmail("student")}
+          >
+            <GroupAddIcon />
+          </IconButton>
+        ) : (
+          <></>
+        )}
       </Stack>
       <Paper sx={{ p: 2 }} elevation={0}>
-        <Stack direction="row" alignItems="center" marginBottom={1}>
-          <Avatar
-            alt="Remy Sharp"
-            src="https://i.pravatar.cc/300"
-            sx={{ width: 45, height: 45 }}
-          />
-          <Typography
-            sx={{
-              fontWeight: 500,
-              marginLeft: 2,
-            }}
-          >
-            Remy Sharp
-          </Typography>
-        </Stack>
-        <Stack direction="row" alignItems="center" marginBottom={1}>
-          <Avatar
-            alt="Remy Sharp"
-            src="https://i.pravatar.cc/300"
-            sx={{ width: 45, height: 45 }}
-          />
-          <Typography
-            sx={{
-              fontWeight: 500,
-              marginLeft: 2,
-            }}
-          >
-            Remy Sharp
-          </Typography>
-        </Stack>
+        {students.list.map((student) => {
+          const { id, name, image } = student;
+          return (
+            <Stack
+              direction="row"
+              alignItems="center"
+              marginBottom={2}
+              key={id}
+            >
+              <Avatar alt={name} src={image} sx={{ width: 45, height: 45 }}>
+                {name.charAt(0)}
+              </Avatar>
+              <Typography
+                sx={{
+                  fontWeight: 500,
+                  marginLeft: 2,
+                }}
+              >
+                {name}
+              </Typography>
+            </Stack>
+          );
+        })}
       </Paper>
     </Container>
   );

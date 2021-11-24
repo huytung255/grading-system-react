@@ -7,14 +7,23 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useDispatch } from "react-redux";
 import { setErrorMsg, setSuccessMsg } from "../redux/alert";
-
-export default function ResetPassword({ location }) {
+import axiosClient from "../api/axiosClient";
+export default function ForgotPassword() {
   const dispatch = useDispatch();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    dispatch(setSuccessMsg("Password reset email is sent!"));
+    try {
+      const res = await axiosClient.post("/api/users/forget-password", {
+        email: data.get("email"),
+      });
+      dispatch(setSuccessMsg(res.data.message));
+    } catch (error) {
+      if (error.response) {
+        dispatch(setErrorMsg(error.response.data.message));
+      } else console.log(error);
+    }
   };
 
   return (
@@ -37,7 +46,7 @@ export default function ResetPassword({ location }) {
               color: "text.secondary",
             }}
           >
-            RESET PASSWORD
+            FORGOT PASSWORD
           </Typography>
           <Box
             component="form"
@@ -61,7 +70,7 @@ export default function ResetPassword({ location }) {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              reset password
+              Send reset email
             </Button>
           </Box>
         </Box>

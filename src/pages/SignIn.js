@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -10,27 +10,52 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 
 import { useDispatch } from "react-redux";
-import { setIsAuthenticated } from "../redux/user";
+import { setIsAuthenticated, setToken } from "../redux/user";
 import { useNavigate, useLocation, NavLink } from "react-router-dom";
 import SocialAuth from "../components/SocialAuth";
 import MyDivider from "../components/MyDivider";
 import { setErrorMsg, setSuccessMsg } from "../redux/alert";
-export default function SignIn({ location }) {
+import axiosClient from "../api/axiosClient";
+import useQuery from "../hooks/useQuery";
+export default function SignIn() {
+  let query = useQuery();
   const { state } = useLocation();
   let navigate = useNavigate();
   const dispatch = useDispatch();
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    if (data.get("email") === "admin" && data.get("password") === "admin") {
-      localStorage.setItem("token", "token");
+    try {
+      const res = await axiosClient.post("/api/login", {
+        email: data.get("email"),
+        password: data.get("password"),
+      });
+      const { token } = res.data;
+      localStorage.setItem("token", token);
+      dispatch(setToken(token));
       dispatch(setIsAuthenticated(true));
-      navigate(state ? state.from.pathname : "/");
-    } else {
-      dispatch(setErrorMsg("Incorrect email or password."));
+
+      if (state) {
+        navigate({
+          pathname: state.from.pathname,
+          search: state.from.search,
+        });
+        // navigate("/class/9/feed");
+      } else {
+        navigate("/");
+      }
+    } catch (error) {
+      if (error.response) {
+        dispatch(setErrorMsg(error.response.data.message));
+      } else console.log(error);
     }
   };
-
+  useEffect(() => {
+    if (query.get("confirmed")) {
+      if (query.get("confirmed") === "true")
+        dispatch(setSuccessMsg("Your account is successfully verified!"));
+    }
+  }, []);
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -97,11 +122,14 @@ export default function SignIn({ location }) {
             Sign In
           </Button>
           <MyDivider text="Or sign in with" />
-          <SocialAuth />
+          <SocialAuth
+            pathname={state ? state.from.pathname : "/"}
+            search={state ? state.from.search : ""}
+          />
           <Grid container>
             <Grid item xs>
               <NavLink
-                to="/reset-password"
+                to="/forgot-password"
                 variant="body2"
                 style={{
                   fontWeight: 500,

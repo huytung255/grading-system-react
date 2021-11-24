@@ -10,10 +10,11 @@ import ClassParticipants from "./pages/ClassParticipants";
 import AcceptInvitation from "./pages/AcceptInvitation";
 import RequireSignOut from "./components/RequireSignOut";
 import SignUp from "./pages/SignUp";
-import ResetPassword from "./pages/ResetPassword";
+import ForgotPassword from "./pages/ForgotPassword";
 import ErrorSnackbar from "./components/ErrorSnackbar";
 import SuccessSnackbar from "./components/SuccessSnackbar";
 import Profile from "./pages/Profile";
+import NewPassword from "./pages/NewPassword";
 function App() {
   const theme = createTheme({
     palette: {
@@ -97,10 +98,18 @@ function App() {
             }
           />
           <Route
+            path="/forgot-password"
+            element={
+              <RequireSignOut>
+                <ForgotPassword />
+              </RequireSignOut>
+            }
+          />
+          <Route
             path="/reset-password"
             element={
               <RequireSignOut>
-                <ResetPassword />
+                <NewPassword />
               </RequireSignOut>
             }
           />

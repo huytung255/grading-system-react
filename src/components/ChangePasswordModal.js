@@ -10,7 +10,7 @@ import {
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { setErrorMsg } from "../redux/alert";
+import { setErrorMsg, setSuccessMsg } from "../redux/alert";
 import axiosClient from "../api/axiosClient";
 const ChangePasswordModal = ({ open, onClose }) => {
   const dispatch = useDispatch();
@@ -19,11 +19,23 @@ const ChangePasswordModal = ({ open, onClose }) => {
     control,
     formState: { errors, isValid },
   } = useForm({ mode: "all" });
-  const onSubmit = (data) => {
-    if (data.newPassword !== data.retypeNewPassword) {
-      dispatch(setErrorMsg("Password and retype password does not match."));
+  const onSubmit = async (data) => {
+    if (data.newPassword !== data.confirmNewPassword) {
+      dispatch(setErrorMsg("Password and confirm password does not match."));
     } else {
-      console.log(data);
+      try {
+        const res = await axiosClient.post("/api/users/change-password", {
+          oldPassword: data.oldPassword,
+          password: data.newPassword,
+          confirmPassword: data.confirmNewPassword,
+        });
+        dispatch(setSuccessMsg(res.data.message));
+        onClose();
+      } catch (error) {
+        if (error.response) {
+          dispatch(setErrorMsg(error.response.data));
+        } else console.log(error);
+      }
     }
   };
 
@@ -92,7 +104,7 @@ const ChangePasswordModal = ({ open, onClose }) => {
               }}
             />
             <Controller
-              name="retypeNewPassword"
+              name="confirmNewPassword"
               control={control}
               defaultValue=""
               shouldUnregister={true}
@@ -100,10 +112,10 @@ const ChangePasswordModal = ({ open, onClose }) => {
               render={({ field }) => {
                 return (
                   <TextField
-                    error={!!errors.retypeNewPassword}
+                    error={!!errors.confirmNewPassword}
                     type="password"
                     variant="outlined"
-                    label="Retype New Password"
+                    label="Confirm New Password"
                     fullWidth={true}
                     margin="dense"
                     required={true}

@@ -1,13 +1,15 @@
 import { Card, CardActionArea, CardContent, Typography } from "@mui/material";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-const ClassCard = ({ name, section, id }) => {
+import RoleBadge from "./RoleBadge";
+const ClassCard = ({ name, section, id, role }) => {
   let navigate = useNavigate();
   return (
     <Card
       variant="outlined"
       sx={{
         borderRadius: 3,
+        borderWidth: 0,
         borderLeftWidth: 10,
         borderLeftColor: "primary.main",
         bgcolor: "text.primary",
@@ -43,6 +45,7 @@ const ClassCard = ({ name, section, id }) => {
           {section}
         </Typography>
       </CardContent>
+      <RoleBadge role={role} />
     </Card>
   );
 };
