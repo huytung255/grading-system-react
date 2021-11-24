@@ -12,8 +12,10 @@ import React, { useEffect, useState } from "react";
 import axiosClient from "../api/axiosClient";
 import { setErrorMsg, setSuccessMsg } from "../redux/alert";
 import { useDispatch } from "react-redux";
+import LoadingButton from "@mui/lab/LoadingButton";
 const InviteByEmailModal = ({ open, onClose, preSelectedTarget, classId }) => {
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const [input, setInput] = useState("");
   const [target, setTarget] = useState("teacher");
   const [receivers, setReceivers] = useState([]);
@@ -56,7 +58,7 @@ const InviteByEmailModal = ({ open, onClose, preSelectedTarget, classId }) => {
       onClose();
     } catch (error) {
       if (error.response) {
-        dispatch(setErrorMsg(error.response.data));
+        dispatch(setErrorMsg(error.response.data.message));
       } else console.log(error);
     }
   }
@@ -143,14 +145,15 @@ const InviteByEmailModal = ({ open, onClose, preSelectedTarget, classId }) => {
             ))}
           </Stack>
           <Stack direction="row-reverse" spacing={2} sx={{ mt: 1 }}>
-            <Button
+            <LoadingButton
+              onClick={handleInvite}
+              loading={loading}
               variant="text"
               size="small"
               disabled={receivers.length === 0 ? true : false}
-              onClick={handleInvite}
             >
               Invite
-            </Button>
+            </LoadingButton>
             <Button
               variant="text"
               onClick={onClose}
