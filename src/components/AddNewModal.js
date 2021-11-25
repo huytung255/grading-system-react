@@ -17,13 +17,6 @@ const AddNewModal = ({ open, onClose, fetchAPI }) => {
     if (res.data === "1 record inserted") {
       fetchAPI();
       onClose();
-<<<<<<< Updated upstream
-    } catch (error) {
-      if (error.response) {
-        dispatch(setErrorMsg(error.response.data));
-      } else console.log(error);
-=======
->>>>>>> Stashed changes
     }
   };
 
