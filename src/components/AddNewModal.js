@@ -7,54 +7,23 @@ import {
   Button,
   Fade,
 } from "@mui/material";
-import LoadingButton from "@mui/lab/LoadingButton";
-import React, { useState } from "react";
+import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import axiosClient from "../api/axiosClient";
-import { setErrorMsg, setSuccessMsg } from "../redux/alert";
-import { useDispatch } from "react-redux";
-const AddNewModal = ({
-  open,
-  onClose,
-  fetchAPI,
-  isEditing,
-  classInfo,
-  classId,
-}) => {
-  const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
-  const {
-    handleSubmit,
-    control,
-    formState: { errors, isValid },
-  } = useForm({ mode: "all" });
+const AddNewModal = ({ open, onClose, fetchAPI }) => {
+  const { handleSubmit, control, formState: errors, getValues } = useForm();
   const onSubmit = async (data) => {
-    try {
-      let res;
-      setLoading(true);
-      if (isEditing) {
-        res = await axiosClient.put("/api/classes/" + classId, {
-          className: data.name,
-          classSection: data.section,
-          subject: data.subject,
-          room: data.room,
-        });
-      } else {
-        res = await axiosClient.post("/api/classes", {
-          className: data.name,
-          classSection: data.section,
-          subject: data.subject,
-          room: data.room,
-        });
-      }
-      setLoading(false);
-      dispatch(setSuccessMsg(res.data.message));
+    const res = await axiosClient.post("/classes/add", { ...data });
+    if (res.data === "1 record inserted") {
       fetchAPI();
       onClose();
+<<<<<<< Updated upstream
     } catch (error) {
       if (error.response) {
         dispatch(setErrorMsg(error.response.data));
       } else console.log(error);
+=======
+>>>>>>> Stashed changes
     }
   };
 
@@ -76,19 +45,18 @@ const AddNewModal = ({
           }}
         >
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, mb: 1 }}>
-            {isEditing ? "Edit" : "Create"} class
+            Create class
           </Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Controller
               name="name"
               control={control}
-              defaultValue={classInfo ? classInfo.name : ""}
-              shouldUnregister={true}
+              defaultValue=""
               rules={{ required: true }}
               render={({ field }) => {
                 return (
                   <TextField
-                    error={!!errors.name}
+                    error={!!errors.class}
                     variant="outlined"
                     label="Class name"
                     fullWidth={true}
@@ -102,8 +70,7 @@ const AddNewModal = ({
             <Controller
               name="section"
               control={control}
-              defaultValue={classInfo ? classInfo.section : ""}
-              shouldUnregister={true}
+              defaultValue=""
               render={({ field }) => (
                 <TextField
                   variant="outlined"
@@ -117,8 +84,7 @@ const AddNewModal = ({
             <Controller
               name="subject"
               control={control}
-              defaultValue={classInfo ? classInfo.subject : ""}
-              shouldUnregister={true}
+              defaultValue=""
               render={({ field }) => (
                 <TextField
                   variant="outlined"
@@ -129,32 +95,11 @@ const AddNewModal = ({
                 />
               )}
             />
-            <Controller
-              name="room"
-              control={control}
-              defaultValue={classInfo ? classInfo.room : ""}
-              shouldUnregister={true}
-              render={({ field }) => (
-                <TextField
-                  variant="outlined"
-                  label="Room"
-                  fullWidth={true}
-                  margin="dense"
-                  {...field}
-                />
-              )}
-            />
 
             <Stack direction="row-reverse" spacing={2} sx={{ mt: 3 }}>
-              <LoadingButton
-                type="submit"
-                loading={loading}
-                variant="text"
-                size="small"
-                disabled={!isValid}
-              >
-                {isEditing ? "Edit" : "Create"}
-              </LoadingButton>
+              <Button variant="text" size="small" type="submit">
+                Create
+              </Button>
               <Button
                 variant="text"
                 onClick={onClose}

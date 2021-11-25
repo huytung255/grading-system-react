@@ -1,11 +1,9 @@
 import axios from "axios";
-import { store } from "../redux/store";
 const axiosClient = axios.create({
   baseURL: process.env.REACT_APP_SERVER_URL,
 });
 axiosClient.interceptors.request.use(
   (config) => {
-    config.headers.Authorization = "Bearer " + store.getState().user.token;
     return config;
   },
   (error) => {
@@ -13,17 +11,12 @@ axiosClient.interceptors.request.use(
   }
 );
 
-axiosClient.interceptors.response.use(
+axios.interceptors.response.use(
   (res) => {
     return res;
   },
   (error) => {
-    const { status } = error.response;
-    if (status === 401) {
-      localStorage.removeItem("token");
-      window.location.href = "/sign-in";
-    }
-    return Promise.reject(error);
+    throw error;
   }
 );
 export default axiosClient;

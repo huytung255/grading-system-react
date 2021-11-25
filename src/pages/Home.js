@@ -5,22 +5,17 @@ import React, { useEffect, useState } from "react";
 import axiosClient from "../api/axiosClient";
 import AddNewModal from "../components/AddNewModal";
 import ClassCard from "../components/ClassCard";
-import { setErrorMsg } from "../redux/alert";
-import { useDispatch } from "react-redux";
 const Home = () => {
-  const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
   const [classes, setClasses] = useState([]);
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
   async function fetchAPI() {
     try {
-      const res = await axiosClient.get("/api/classes");
-      setClasses([...res.data]);
-    } catch (error) {
-      if (error.response) {
-        dispatch(setErrorMsg(error.response.data));
-      } else console.log(error);
+      const res = await axiosClient.get("/classes");
+      setClasses(res.data);
+    } catch (e) {
+      console.log(e);
     }
   }
   useEffect(() => {
@@ -43,26 +38,13 @@ const Home = () => {
           open={openModal}
           onClose={handleClose}
           fetchAPI={fetchAPI}
-          isEditing={false}
         />
         <Grid container spacing={2}>
           {classes.map((classItem) => {
-            const {
-              id,
-              className,
-              classSection,
-              subject,
-              room,
-              usersclasses: { role },
-            } = classItem;
+            const { CLASS_ID, NAME, SECTION, SUBJECT } = classItem;
             return (
-              <Grid item xs={12} md={3} key={id}>
-                <ClassCard
-                  name={className}
-                  section={classSection}
-                  id={id}
-                  role={role}
-                />
+              <Grid item xs={12} md={3} key={CLASS_ID}>
+                <ClassCard name={NAME} section={SECTION} />
               </Grid>
             );
           })}
