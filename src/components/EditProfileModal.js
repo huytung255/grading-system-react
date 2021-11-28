@@ -28,12 +28,22 @@ const EditProfileModal = ({
   } = useForm({ mode: "all" });
   const onSubmit = async (data) => {
     try {
-      const res = await axiosClient.post("/api/users/dashboard", {
-        name: data.name,
-        phone: data.phone,
-        student_id: data.studentId,
-      });
-      dispatch(setSuccessMsg(res.data.message));
+      if (data.studentId) {
+        const res = await axiosClient.post("/api/users/dashboard", {
+          name: data.name,
+          phone: data.phone,
+          student_id: data.studentId,
+        });
+        dispatch(setSuccessMsg(res.data.message));
+      } else {
+        const res = await axiosClient.post("/api/users/dashboard", {
+          name: data.name,
+          phone: data.phone,
+          student_id: studentId,
+        });
+        dispatch(setSuccessMsg(res.data.message));
+      }
+
       fetchAPI();
       onClose();
     } catch (error) {
@@ -103,24 +113,29 @@ const EditProfileModal = ({
                 />
               )}
             />
-            <Controller
-              name="studentId"
-              control={control}
-              defaultValue={studentId}
-              shouldUnregister={true}
-              rules={{ pattern: "[0-9]" }}
-              render={({ field }) => (
-                <TextField
-                  error={!!errors.studentId}
-                  type="number"
-                  variant="outlined"
-                  label="Student ID"
-                  fullWidth={true}
-                  margin="dense"
-                  {...field}
-                />
-              )}
-            />
+            {studentId ? (
+              <></>
+            ) : (
+              <Controller
+                name="studentId"
+                control={control}
+                defaultValue={studentId}
+                shouldUnregister={true}
+                rules={{ pattern: "[0-9]" }}
+                render={({ field }) => (
+                  <TextField
+                    error={!!errors.studentId}
+                    helperText="Student ID can only be changed once!"
+                    type="number"
+                    variant="outlined"
+                    label="Student ID"
+                    fullWidth={true}
+                    margin="dense"
+                    {...field}
+                  />
+                )}
+              />
+            )}
 
             <Stack direction="row-reverse" spacing={2} sx={{ mt: 3 }}>
               <Button

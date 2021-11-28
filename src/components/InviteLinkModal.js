@@ -6,13 +6,29 @@ import {
   Fade,
   Paper,
   IconButton,
+  TextField,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import axiosClient from "../api/axiosClient";
-import AssignmentIcon from "@mui/icons-material/Assignment";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { setErrorMsg } from "../redux/alert";
 import { useDispatch } from "react-redux";
 
+import { styled } from "@mui/material/styles";
+const LinkTextField = styled(TextField)(({ theme }) => ({
+  "& .Mui-disabled": {
+    background: theme.palette.primary.main,
+    WebkitTextFillColor: theme.palette.primary.contrastText,
+    borderRadius: 5,
+    borderBottom: "none !important",
+  },
+  "& .Mui-disabled::after": {
+    borderBottom: "none !important",
+  },
+  "& .Mui-disabled::before": {
+    borderBottom: "none !important",
+  },
+}));
 const InviteLinkModal = ({ open, onClose, classId }) => {
   const dispatch = useDispatch();
   const [inviteStudent, setInviteStudent] = useState("");
@@ -58,7 +74,7 @@ const InviteLinkModal = ({ open, onClose, classId }) => {
             Invite teachers
           </Typography>
           <Stack direction="row" marginBottom={2}>
-            <Paper
+            {/* <Paper
               sx={{
                 overflowX: "scroll",
                 paddingLeft: 2,
@@ -71,22 +87,36 @@ const InviteLinkModal = ({ open, onClose, classId }) => {
               elevation={0}
             >
               {inviteTeacher}
-            </Paper>
-            <IconButton
-              color="primary"
-              sx={{ ml: 1 }}
-              onClick={() => {
-                navigator.clipboard.writeText(inviteTeacher);
+            </Paper> */}
+            <LinkTextField
+              defaultValue={inviteTeacher}
+              variant="filled"
+              fullWidth
+              disabled
+            />
+            <Box
+              sx={{
+                ml: 1,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
-              <AssignmentIcon />
-            </IconButton>
+              <IconButton
+                color="primary"
+                onClick={() => {
+                  navigator.clipboard.writeText(inviteTeacher);
+                }}
+              >
+                <ContentCopyIcon />
+              </IconButton>
+            </Box>
           </Stack>
           <Typography sx={{ flexGrow: 1, fontWeight: 500 }}>
             Invite students
           </Typography>
           <Stack direction="row" marginBottom={2}>
-            <Paper
+            {/* <Paper
               sx={{
                 overflowX: "scroll",
                 paddingLeft: 2,
@@ -99,16 +129,30 @@ const InviteLinkModal = ({ open, onClose, classId }) => {
               elevation={0}
             >
               {inviteStudent}
-            </Paper>
-            <IconButton
-              color="primary"
-              sx={{ ml: 1 }}
-              onClick={() => {
-                navigator.clipboard.writeText(inviteStudent);
+            </Paper> */}
+            <LinkTextField
+              defaultValue={inviteStudent}
+              variant="filled"
+              fullWidth
+              disabled
+            />
+            <Box
+              sx={{
+                ml: 1,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
-              <AssignmentIcon />
-            </IconButton>
+              <IconButton
+                color="primary"
+                onClick={() => {
+                  navigator.clipboard.writeText(inviteStudent);
+                }}
+              >
+                <ContentCopyIcon />
+              </IconButton>
+            </Box>
           </Stack>
         </Box>
       </Fade>

@@ -15,6 +15,7 @@ import ErrorSnackbar from "./components/ErrorSnackbar";
 import SuccessSnackbar from "./components/SuccessSnackbar";
 import Profile from "./pages/Profile";
 import NewPassword from "./pages/NewPassword";
+import EditGradeStructure from "./pages/EditGradeStructure";
 function App() {
   const theme = createTheme({
     palette: {
@@ -62,6 +63,14 @@ function App() {
             element={
               <RequireAuth>
                 <ClassFeed />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/class/:classId/feed/edit-grade-structure"
+            element={
+              <RequireAuth>
+                <EditGradeStructure />
               </RequireAuth>
             }
           />

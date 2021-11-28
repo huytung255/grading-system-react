@@ -1,6 +1,6 @@
-import { Container, Grid, IconButton, Paper, Stack } from "@mui/material";
+import { Container, Grid, Paper, Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Card, CardContent, Typography, Button, Avatar } from "@mui/material";
 import LinkIcon from "@mui/icons-material/Link";
 import EmailIcon from "@mui/icons-material/Email";
@@ -23,10 +23,15 @@ const ClassFeed = () => {
     subject: "",
     room: "",
   });
+  const [gradeStructure, setGradeStructure] = useState({
+    Midterm: 40,
+    Final: 60,
+  });
   const [openInviteLink, setOpenInviteLink] = useState(false);
   const [openInviteByEmail, setOpenInviteByEmail] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const [openGradeStructure, setOpenGradeStructure] = useState(false);
   const handleOpenInviteLink = () => setOpenInviteLink(true);
   const handleCloseInviteLink = () => setOpenInviteLink(false);
   const handleOpenInviteByEmail = () => setOpenInviteByEmail(true);
@@ -35,6 +40,8 @@ const ClassFeed = () => {
   const handleCloseEdit = () => setOpenEdit(false);
   const handleOpenDelete = () => setOpenDelete(true);
   const handleCloseDelete = () => setOpenDelete(false);
+  const handleOpenGradeStructure = () => setOpenGradeStructure(true);
+  const handleCloseGradeStructure = () => setOpenGradeStructure(false);
   async function fetchAPI() {
     try {
       const res = await axiosClient.get("/api/classes/" + classId);
@@ -171,40 +178,131 @@ const ClassFeed = () => {
         )}
       </Card>
       <Grid container spacing={3}>
-        {role === "teacher" ? (
-          <Grid item xs={3}>
-            <Button
-              startIcon={<LinkIcon />}
-              sx={{ width: "100%", fontWeight: 500, mb: 1 }}
-              variant="contained"
-              onClick={handleOpenInviteLink}
+        <Grid item xs={3}>
+          <Paper
+            sx={{
+              p: 1.5,
+              pb: 2,
+              mb: 1,
+              borderRadius: 2,
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: 17,
+                fontWeight: 700,
+                color: "secondary.main",
+              }}
             >
-              Invite Link
-            </Button>
-            <Button
-              startIcon={<EmailIcon />}
-              sx={{ width: "100%", fontWeight: 500 }}
-              variant="contained"
-              onClick={handleOpenInviteByEmail}
-            >
-              Invite By Email
-            </Button>
-            <InviteLinkModal
-              open={openInviteLink}
-              onClose={handleCloseInviteLink}
-              classId={classId}
-            />
-            <InviteByEmailModal
-              open={openInviteByEmail}
-              onClose={handleCloseInviteByEmail}
-              classId={classId}
-            />
-          </Grid>
-        ) : (
-          <></>
-        )}
+              Grade Structure
+            </Typography>
 
-        <Grid item xs={role === "teacher" ? 9 : 12}>
+            <Stack direction="row" marginBottom={1}>
+              <Typography
+                sx={{
+                  fontSize: 15,
+                  fontWeight: 500,
+                  color: "secondary.main",
+                  width: "100%",
+                }}
+              >
+                Total
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: 15,
+                  fontWeight: 500,
+                  color: "secondary.main",
+                }}
+              >
+                100
+              </Typography>
+            </Stack>
+            {Object.keys(gradeStructure).map((grade, i) => (
+              <Stack direction="row" key={i}>
+                <Typography
+                  sx={{
+                    fontSize: 14,
+                    fontWeight: 500,
+                    color: "secondary.main",
+                    width: "100%",
+                  }}
+                >
+                  {grade}
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: 14,
+                    fontWeight: 500,
+                    color: "secondary.main",
+                  }}
+                >
+                  {gradeStructure[grade]}
+                </Typography>
+              </Stack>
+            ))}
+            {role === "teacher" ? (
+              <Button
+                component={Link}
+                to={`/class/${classId}/feed/edit-grade-structure`}
+                fullWidth
+                variant="text"
+                startIcon={<EditIcon />}
+                sx={{
+                  mt: 1,
+                }}
+              >
+                Edit
+              </Button>
+            ) : (
+              // <Button
+              //   onClick={handleOpenGradeStructure}
+              //   fullWidth
+              //   variant="text"
+              //   startIcon={<EditIcon />}
+              //   sx={{
+              //     mt: 1,
+              //   }}
+              // >
+              //   Edit
+              // </Button>
+              <></>
+            )}
+          </Paper>
+          {role === "teacher" ? (
+            <>
+              <Button
+                startIcon={<LinkIcon />}
+                sx={{ width: "100%", fontWeight: 500, mb: 1 }}
+                variant="contained"
+                onClick={handleOpenInviteLink}
+              >
+                Invite Link
+              </Button>
+              <Button
+                startIcon={<EmailIcon />}
+                sx={{ width: "100%", fontWeight: 500 }}
+                variant="contained"
+                onClick={handleOpenInviteByEmail}
+              >
+                Invite By Email
+              </Button>
+              <InviteLinkModal
+                open={openInviteLink}
+                onClose={handleCloseInviteLink}
+                classId={classId}
+              />
+              <InviteByEmailModal
+                open={openInviteByEmail}
+                onClose={handleCloseInviteByEmail}
+                classId={classId}
+              />
+            </>
+          ) : (
+            <></>
+          )}
+        </Grid>
+        <Grid item xs={9}>
           <Paper
             sx={{
               width: "100%",
