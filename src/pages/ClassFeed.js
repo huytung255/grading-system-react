@@ -56,8 +56,7 @@ const ClassFeed = () => {
         res2.data.map((grade) => {
           return {
             title: grade.gradeTitle,
-            // percentage: Number(grade.gradeDetail),
-            percentage: grade.gradeDetail,
+            percentage: Number(grade.gradeDetail),
           };
         })
       );

@@ -28,8 +28,7 @@ const EditGradeStructure = () => {
           return {
             id: grade.id,
             title: grade.gradeTitle,
-            // percentage: Number(grade.gradeDetail),
-            percentage: grade.gradeDetail,
+            percentage: Number(grade.gradeDetail),
           };
         })
       );
