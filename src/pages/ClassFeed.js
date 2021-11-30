@@ -23,15 +23,12 @@ const ClassFeed = () => {
     subject: "",
     room: "",
   });
-  const [gradeStructure, setGradeStructure] = useState({
-    Midterm: 40,
-    Final: 60,
-  });
+  const [gradeStructure, setGradeStructure] = useState([]);
   const [openInviteLink, setOpenInviteLink] = useState(false);
   const [openInviteByEmail, setOpenInviteByEmail] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
-  const [openGradeStructure, setOpenGradeStructure] = useState(false);
+
   const handleOpenInviteLink = () => setOpenInviteLink(true);
   const handleCloseInviteLink = () => setOpenInviteLink(false);
   const handleOpenInviteByEmail = () => setOpenInviteByEmail(true);
@@ -40,8 +37,7 @@ const ClassFeed = () => {
   const handleCloseEdit = () => setOpenEdit(false);
   const handleOpenDelete = () => setOpenDelete(true);
   const handleCloseDelete = () => setOpenDelete(false);
-  const handleOpenGradeStructure = () => setOpenGradeStructure(true);
-  const handleCloseGradeStructure = () => setOpenGradeStructure(false);
+
   async function fetchAPI() {
     try {
       const res = await axiosClient.get("/api/classes/" + classId);
@@ -53,6 +49,18 @@ const ClassFeed = () => {
         subject: subject,
         room: room,
       });
+      const res2 = await axiosClient.get(
+        "/api/classes/" + classId + "/grade-structure"
+      );
+      setGradeStructure(
+        res2.data.map((grade) => {
+          return {
+            title: grade.gradeTitle,
+            // percentage: Number(grade.gradeDetail),
+            percentage: grade.gradeDetail,
+          };
+        })
+      );
     } catch (error) {
       // console.log(error);
       if (error.response) {
@@ -196,29 +204,36 @@ const ClassFeed = () => {
             >
               Grade Structure
             </Typography>
+            {gradeStructure.length === 0 ? (
+              <></>
+            ) : (
+              <Stack direction="row" marginBottom={1}>
+                <Typography
+                  sx={{
+                    fontSize: 15,
+                    fontWeight: 500,
+                    color: "secondary.main",
+                    width: "100%",
+                  }}
+                >
+                  Total
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: 15,
+                    fontWeight: 500,
+                    color: "secondary.main",
+                  }}
+                >
+                  {gradeStructure.reduce(
+                    (prev, current) => prev + current.percentage,
+                    0
+                  )}
+                </Typography>
+              </Stack>
+            )}
 
-            <Stack direction="row" marginBottom={1}>
-              <Typography
-                sx={{
-                  fontSize: 15,
-                  fontWeight: 500,
-                  color: "secondary.main",
-                  width: "100%",
-                }}
-              >
-                Total
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: 15,
-                  fontWeight: 500,
-                  color: "secondary.main",
-                }}
-              >
-                100
-              </Typography>
-            </Stack>
-            {Object.keys(gradeStructure).map((grade, i) => (
+            {gradeStructure.map((grade, i) => (
               <Stack direction="row" key={i}>
                 <Typography
                   sx={{
@@ -228,7 +243,7 @@ const ClassFeed = () => {
                     width: "100%",
                   }}
                 >
-                  {grade}
+                  {grade.title}
                 </Typography>
                 <Typography
                   sx={{
@@ -237,7 +252,7 @@ const ClassFeed = () => {
                     color: "secondary.main",
                   }}
                 >
-                  {gradeStructure[grade]}
+                  {grade.percentage}
                 </Typography>
               </Stack>
             ))}
@@ -255,17 +270,6 @@ const ClassFeed = () => {
                 Edit
               </Button>
             ) : (
-              // <Button
-              //   onClick={handleOpenGradeStructure}
-              //   fullWidth
-              //   variant="text"
-              //   startIcon={<EditIcon />}
-              //   sx={{
-              //     mt: 1,
-              //   }}
-              // >
-              //   Edit
-              // </Button>
               <></>
             )}
           </Paper>

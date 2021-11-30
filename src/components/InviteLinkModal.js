@@ -4,7 +4,6 @@ import {
   Box,
   Stack,
   Fade,
-  Paper,
   IconButton,
   TextField,
 } from "@mui/material";

@@ -1,17 +1,28 @@
 import React, { useEffect, useState, useLayoutEffect, useRef } from "react";
-import { Paper, Stack, TextField, Button } from "@mui/material";
+import { Paper, Stack, TextField } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import SaveIcon from "@mui/icons-material/Save";
-import EditIcon from "@mui/icons-material/Edit";
-
-const GradeEditor = ({ grade, provided, index, setGradeStructure }) => {
+import axiosClient from "../api/axiosClient";
+import { useDispatch } from "react-redux";
+import { setErrorMsg } from "../redux/alert";
+import LoadingButton from "@mui/lab/LoadingButton/LoadingButton";
+const GradeEditor = ({
+  grade,
+  provided,
+  index,
+  classId,
+  setGradeStructure,
+}) => {
   const firstRenderRef = useRef(true);
   const [title, setTitle] = useState(grade.title);
   const [percentage, setPercentage] = useState(grade.percentage);
+  const [id, setId] = useState(grade.id);
+  const [isDeleting, setIsDeleting] = useState(false);
 
+  const dispatch = useDispatch();
   useLayoutEffect(() => {
     setTitle(grade.title);
     setPercentage(grade.percentage);
+    setId(grade.id);
   }, [grade]);
 
   useEffect(() => {
@@ -24,6 +35,7 @@ const GradeEditor = ({ grade, provided, index, setGradeStructure }) => {
     setGradeStructure((prev) => {
       const newGradeStructure = [...prev];
       newGradeStructure[index] = {
+        id: id,
         title: title,
         percentage: percentage,
       };
@@ -36,7 +48,7 @@ const GradeEditor = ({ grade, provided, index, setGradeStructure }) => {
       setPercentage(Number(newVal));
     }
   };
-  const handleDelete = () => {
+  const handleDelete = async () => {
     setGradeStructure((prev) => {
       const newGradeStructure = [...prev];
       newGradeStructure.splice(index, 1);
@@ -74,7 +86,8 @@ const GradeEditor = ({ grade, provided, index, setGradeStructure }) => {
           fullWidth
         />
 
-        <Button
+        <LoadingButton
+          loading={isDeleting}
           disableElevation
           color="error"
           variant="contained"
@@ -83,7 +96,7 @@ const GradeEditor = ({ grade, provided, index, setGradeStructure }) => {
           onClick={handleDelete}
         >
           <DeleteIcon fontSize="small" />
-        </Button>
+        </LoadingButton>
       </Stack>
     </Paper>
   );

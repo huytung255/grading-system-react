@@ -2,8 +2,7 @@ import "./App.css";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import RequireAuth from "./components/RequireAuth";
 import ClassFeed from "./pages/ClassFeed";
 import ClassParticipants from "./pages/ClassParticipants";
@@ -15,7 +14,7 @@ import ErrorSnackbar from "./components/ErrorSnackbar";
 import SuccessSnackbar from "./components/SuccessSnackbar";
 import Profile from "./pages/Profile";
 import NewPassword from "./pages/NewPassword";
-import ClassGradeStructure from "./pages/ClassGradeStructure";
+import EditGradeStructure from "./pages/EditGradeStructure";
 function App() {
   const theme = createTheme({
     palette: {
@@ -127,14 +126,6 @@ function App() {
             element={
               <RequireAuth>
                 <AcceptInvitation />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="/class/:classId/grade-structure"
-            element={
-              <RequireAuth>
-                <ClassGradeStructure />
               </RequireAuth>
             }
           />
