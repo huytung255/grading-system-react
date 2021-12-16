@@ -1,9 +1,16 @@
-import { AppBar, IconButton, Stack, Toolbar, Typography } from "@mui/material";
+import {
+  AppBar,
+  IconButton,
+  Stack,
+  Toolbar,
+  Typography,
+  MenuItem,
+  Menu,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import React, { useState } from "react";
+import axiosClient from "../api/axiosClient";
 import {
   NavLink,
   matchPath,
@@ -19,6 +26,7 @@ const NavBar = () => {
   const location = useLocation();
   const { classId } = useParams();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isTeacher, setIsTeacher] = useState(false);
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -32,6 +40,14 @@ const NavBar = () => {
     navigate("/sign-in");
   };
   let match = matchPath("/class/:id/*", location.pathname.toString());
+  if (match) {
+    (async function () {
+      const res = await axiosClient.get("/api/classes/" + classId);
+      const { userRole } = res.data;
+      if (userRole === "teacher") setIsTeacher(true);
+      else setIsTeacher(false);
+    })();
+  }
   const activeStyle = {
     borderBottomStyle: "solid",
     borderBottomColor: "#FFFFFF",
@@ -93,6 +109,18 @@ const NavBar = () => {
             >
               <Typography sx={{ fontWeight: 500 }}>Participants</Typography>
             </NavLink>
+            {isTeacher ? (
+              <NavLink
+                to={"/class/" + classId + "/gradeBoard"}
+                style={({ isActive }) =>
+                  isActive ? activeStyle : inactiveStyle
+                }
+              >
+                <Typography sx={{ fontWeight: 500 }}>GradeBoard</Typography>
+              </NavLink>
+            ) : (
+              <></>
+            )}
           </Stack>
         ) : (
           <></>

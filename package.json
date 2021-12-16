@@ -6,15 +6,18 @@
     "@emotion/react": "^11.5.0",
     "@emotion/styled": "^11.3.0",
     "@fontsource/roboto": "^4.5.1",
+    "@material-table/core": "^0.2.9",
+    "@material-table/exporters": "^1.0.7",
     "@mui/icons-material": "^5.0.5",
     "@mui/lab": "^5.0.0-alpha.56",
-    "@mui/material": "^5.0.5",
+    "@mui/material": "^5.2.3",
     "@reduxjs/toolkit": "^1.6.2",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "@use-gesture/react": "^10.1.6",
     "axios": "^0.24.0",
+    "customize-cra": "^1.0.0",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
     "react-dom": "^17.0.2",
@@ -26,9 +29,9 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -48,5 +51,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "babel-plugin-import": "^1.13.3",
+    "react-app-rewired": "^2.1.8"
   }
 }

@@ -14,15 +14,15 @@ code {
     monospace;
 }
 /* Hide scrollbar for Chrome, Safari and Opera */
-div::-webkit-scrollbar {
+/* div::-webkit-scrollbar {
   display: none;
-}
+} */
 
 /* Hide scrollbar for IE, Edge and Firefox */
-div {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
+/* div {
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
+} */
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -93,16 +93,28 @@ input[type="number"] {
   text-transform: uppercase;
   letter-spacing: 2px; */
 }
+.table-container table:first-child tr td:first-child,
+.table-container table:first-child tr th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 999;
+}
+.table-container table:first-child tr th:first-child {
+  z-index: 9999;
+}
+.table-container table:first-child tr td:nth-child(2),
+.table-container table:first-child tr th:nth-child(2) {
+  position: sticky;
+  left: 150px;
+  z-index: 999;
+}
+.table-container table:first-child tr th:nth-child(2) {
+  z-index: 9999;
+}
 
-/* .content > div:nth-child(1) {
-  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+.custom-cell > * {
+  float: right;
 }
-.content > div:nth-child(2) {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+.custom-cell > button {
+  margin-left: 5px;
 }
-.content > div:nth-child(3) {
-  background: linear-gradient(135deg, #5ee7df 0%, #b490ca 100%);
-}
-.content > div:nth-child(4) {
-  background: linear-gradient(135deg, #c3cfe2 0%, #c3cfe2 100%);
-} */

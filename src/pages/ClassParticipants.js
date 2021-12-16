@@ -1,6 +1,12 @@
-import { Container, Paper, Stack, IconButton } from "@mui/material";
+import {
+  Container,
+  Paper,
+  Stack,
+  IconButton,
+  Typography,
+  Avatar,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Typography, Avatar } from "@mui/material";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import InviteByEmailModal from "../components/InviteByEmailModal";
 import { setErrorMsg } from "../redux/alert";

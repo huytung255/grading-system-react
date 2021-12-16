@@ -9,7 +9,7 @@ import GradeEditor from "../components/GradeEditor";
 import axiosClient from "../api/axiosClient";
 import { useDispatch } from "react-redux";
 import { setErrorMsg, setSuccessMsg } from "../redux/alert";
-import LoadingButton from "@mui/lab/LoadingButton/LoadingButton";
+import LoadingButton from "@mui/lab/LoadingButton";
 const EditGradeStructure = () => {
   const { classId } = useParams();
   const dispatch = useDispatch();

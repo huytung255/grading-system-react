@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
+import {
+  CssBaseline,
+  TextField,
+  Grid,
+  Box,
+  Typography,
+  Container,
+} from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
 import SocialAuth from "../components/SocialAuth";
 import MyDivider from "../components/MyDivider";

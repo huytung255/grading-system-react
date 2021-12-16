@@ -1,10 +1,9 @@
 import React from "react";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
+import { Snackbar, Alert } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { setIsSuccess, resetSuccess } from "../redux/alert";
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+const MyAlert = React.forwardRef(function MyAlert(props, ref) {
+  return <Alert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 export default function SuccessSnackbar() {
@@ -29,9 +28,9 @@ export default function SuccessSnackbar() {
       onClose={handleClose}
       TransitionProps={{ onExited: handleExited }}
     >
-      <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+      <MyAlert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
         {successMsg}
-      </Alert>
+      </MyAlert>
     </Snackbar>
   );
 }

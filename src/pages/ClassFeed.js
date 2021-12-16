@@ -1,7 +1,16 @@
-import { Container, Grid, Paper, Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Card, CardContent, Typography, Button, Avatar } from "@mui/material";
+import {
+  Container,
+  Grid,
+  Paper,
+  Stack,
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Avatar,
+} from "@mui/material";
 import LinkIcon from "@mui/icons-material/Link";
 import EmailIcon from "@mui/icons-material/Email";
 import InviteLinkModal from "../components/InviteLinkModal";

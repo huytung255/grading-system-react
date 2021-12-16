@@ -15,6 +15,7 @@ import SuccessSnackbar from "./components/SuccessSnackbar";
 import Profile from "./pages/Profile";
 import NewPassword from "./pages/NewPassword";
 import EditGradeStructure from "./pages/EditGradeStructure";
+import GradeBoard from "./pages/GradeBoard";
 function App() {
   const theme = createTheme({
     palette: {
@@ -78,6 +79,14 @@ function App() {
             element={
               <RequireAuth>
                 <ClassParticipants />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/class/:classId/gradeBoard"
+            element={
+              <RequireAuth>
+                <GradeBoard />
               </RequireAuth>
             }
           />

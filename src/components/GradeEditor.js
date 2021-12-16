@@ -4,7 +4,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axiosClient from "../api/axiosClient";
 import { useDispatch } from "react-redux";
 import { setErrorMsg } from "../redux/alert";
-import LoadingButton from "@mui/lab/LoadingButton/LoadingButton";
+import LoadingButton from "@mui/lab/LoadingButton";
 const GradeEditor = ({
   grade,
   provided,
