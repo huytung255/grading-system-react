@@ -16,7 +16,7 @@ import MaterialTable, {
 import { Navigate, useParams } from "react-router-dom";
 import { ExportCsv, ExportPdf } from "@material-table/exporters";
 import CellMenu from "../components/CellMenu";
-import ColumnHeaderMenu from "../components/ColumnHeaderMenu";
+
 import GradeBoardPrompt from "../components/GradeBoardPrompt";
 import DownloadIcon from "@mui/icons-material/Download";
 
@@ -24,14 +24,15 @@ import axiosClient from "../api/axiosClient";
 import useUpdateEffect from "../hooks/useUpdateEffect";
 import { useDispatch } from "react-redux";
 import { setErrorMsg, setSuccessMsg } from "../redux/alert";
-const Input = styled("input")({
-  display: "none",
-});
+import {
+  refreshColumns,
+  processColumns,
+  processRows,
+} from "../services/tableServices";
 const GradeBoard = () => {
   const dispatch = useDispatch();
   const { classId } = useParams();
   const [role, setRole] = useState(null);
-  const [hasStudentList, setHasStudentList] = useState(null);
   const [columns, setColumns] = useState([]);
   const [data, setData] = useState([]);
   useEffect(() => {
@@ -51,146 +52,21 @@ const GradeBoard = () => {
     const res = await axiosClient.get(
       "/api/classes/" + classId + "/students-gradeboard"
     );
-    const { allStudent, studentGrades, averagePoint } = res.data;
-    const newData = allStudent.map((student, index) => {
-      const { fullName, student_id, image } = student;
-      const { studentsClasses_id } = studentGrades[index][0];
-      let row = {
-        studentId: student_id,
-        name: fullName,
-        studentsClassesId: studentsClasses_id,
-      };
-      if (typeof image === "string") row.image = image;
-      studentGrades[index].forEach((studentGrade) => {
-        const { gradeTitle, grade, finalizedGrade } = studentGrade;
-        if (typeof gradeTitle === "string") {
-          row[gradeTitle] = grade ? grade : 0;
-          row[gradeTitle + "Finalized"] = finalizedGrade;
-          row[gradeTitle + "Status"] = grade
-            ? finalizedGrade === grade
-              ? "Finalized"
-              : "Drafted"
-            : "New";
-        } else {
-          const { averagePoint } = studentGrade;
-          row.average = averagePoint;
-        }
-        return;
-      });
-      return row;
-    });
-    const classAverage = {
-      studentId: "",
-      name: "Class average",
-    };
-    averagePoint.forEach((point) => {
-      if (typeof point.gradeTitle === "string")
-        classAverage[point.gradeTitle] = point.averagePoint;
-      else classAverage.average = point.averagePoint;
-    });
-    newData.unshift(classAverage);
-    setData(newData);
+    processRows(res.data, setData);
   };
+  //refresh columns
   useUpdateEffect(() => {
-    setColumns((prev) => {
-      const newCols = [...prev];
-      newCols.forEach(
-        (col) =>
-          (col.title = (
-            <div className="custom-header">
-              {col.field}: {col.gradeDetail}
-              <ColumnHeaderMenu
-                field={col.field}
-                gradeStructureId={col.gradeStructureId}
-                data={[...data]}
-                classId={classId}
-                fetchRowsOnly={fetchRowsOnly}
-              />
-            </div>
-          ))
-      );
-      return newCols;
-    });
+    refreshColumns(data, classId, setColumns, fetchRowsOnly);
   }, [data]);
-
   const fetchData = async () => {
     const res = await axiosClient.get(
       "/api/classes/" + classId + "/students-gradeboard"
     );
-    const { allStudent } = res.data;
-    console.log(res.data);
-    if (allStudent.length !== 0) {
-      setHasStudentList(true);
-      const { gradeStructureList, studentGrades, averagePoint } = res.data;
-
-      setColumns(
-        gradeStructureList.map((grade) => {
-          return {
-            title: (
-              <>
-                {grade.gradeTitle}: {grade.gradeDetail}
-                <ColumnHeaderMenu
-                  field={grade.gradeTitle}
-                  gradeStructureId={grade.id}
-                  data={[...data]}
-                  setData={setData}
-                  fetchRowsOnly={fetchRowsOnly}
-                />
-              </>
-            ),
-            field: grade.gradeTitle,
-            type: "numeric",
-            width: 200,
-            emptyValue: 0,
-            gradeStructureId: grade.id,
-            gradeDetail: grade.gradeDetail,
-            validate: (rowData) => rowData >= 0 && rowData <= 100,
-          };
-        })
-      );
-      const newData = allStudent.map((student, index) => {
-        const { fullName, student_id, image } = student;
-        const { studentsClasses_id } = studentGrades[index][0];
-
-        let row = {
-          studentId: student_id,
-          name: fullName,
-          studentsClassesId: studentsClasses_id,
-        };
-        if (typeof image === "string") row.image = image;
-        studentGrades[index].forEach((studentGrade) => {
-          const { gradeTitle, grade, finalizedGrade } = studentGrade;
-          if (typeof gradeTitle === "string") {
-            row[gradeTitle] = grade ? grade : 0;
-            row[gradeTitle + "Finalized"] = finalizedGrade;
-            row[gradeTitle + "Status"] = grade
-              ? finalizedGrade === grade
-                ? "Finalized"
-                : "Drafted"
-              : "New";
-          } else {
-            const { averagePoint } = studentGrade;
-            row.average = averagePoint;
-          }
-          return;
-        });
-        return row;
-      });
-      const classAverage = {
-        studentId: "",
-        name: "Class average",
-      };
-      averagePoint.forEach((point) => {
-        if (typeof point.gradeTitle === "string")
-          classAverage[point.gradeTitle] = point.averagePoint;
-        else classAverage.average = point.averagePoint;
-      });
-      newData.unshift(classAverage);
-      setData(newData);
-    } else setHasStudentList(false);
+    processColumns(res.data, data, classId, setColumns, fetchRowsOnly);
+    processRows(res.data, setData);
   };
 
-  if (role === null || hasStudentList === null) return <></>;
+  if (role === null) return <></>;
   if (role === "student") return <Navigate to="/" />;
   if (role === "teacher")
     return (
@@ -198,244 +74,242 @@ const GradeBoard = () => {
         maxWidth="xl"
         sx={{
           marginTop: 5,
-          textAlign: "center",
+          textAlign: "right",
         }}
       >
-        {hasStudentList === false ? (
-          <GradeBoardPrompt
-            setHasStudentList={setHasStudentList}
-            classId={classId}
-            fetchData={fetchData}
-          />
-        ) : (
-          <div className="table-container">
-            <MaterialTable
-              components={{
-                Cell: (props) => {
-                  const { field } = props.columnDef;
-                  const { name } = props.rowData;
+        <GradeBoardPrompt classId={classId} fetchData={fetchData} />
+        <Typography
+          sx={{
+            textAlign: "left",
+            color: "text.secondary",
+            fontStyle: "italic",
+            fontSize: 13,
+          }}
+        >
+          *Only finalized grades are accounted in average calculations.
+        </Typography>
+        <div className="table-container">
+          <MaterialTable
+            components={{
+              Cell: (props) => {
+                const { field } = props.columnDef;
+                const { name } = props.rowData;
 
-                  if (
-                    field === "studentId" ||
-                    field === "name" ||
-                    field === "average"
-                  )
-                    return <MTableCell {...props} />;
-                  else if (name === "Class average")
-                    return (
-                      <TableCell className="column-average">
-                        <Typography component="span">
-                          {props.rowData[field]}
-                        </Typography>
-                      </TableCell>
-                    );
-                  else {
-                    const { studentsClassesId } = props.rowData;
-                    const { field, gradeStructureId } = props.columnDef;
-                    return (
-                      <MTableCell {...props} className="custom-cell">
-                        <>
-                          <div className="cell-menu-wrapper">
-                            <CellMenu
-                              field={field}
-                              studentsClassesId={studentsClassesId}
-                              gradeStructureId={gradeStructureId}
-                              status={props.rowData[field + "Status"]}
-                              fetchRowsOnly={fetchRowsOnly}
-                            />
-                          </div>
-                          <Typography
-                            component="span"
-                            sx={{
-                              color: "text.secondary",
-                              fontSize: 13,
-                              textAlign: "left",
-                            }}
-                          >
-                            {props.rowData[field + "Status"]}
-                            {props.rowData[field + "Status"] === "Drafted" &&
-                              props.rowData[field + "Finalized"] && (
-                                <Typography
-                                  sx={{
-                                    fontSize: 11,
-                                  }}
-                                >
-                                  Finalized:{" "}
-                                  {props.rowData[field + "Finalized"]}
-                                </Typography>
-                              )}
-                          </Typography>
-                        </>
-                      </MTableCell>
-                    );
-                  }
-                },
-                Toolbar: (props) => (
-                  <>
-                    <MTableToolbar {...props} />
-                    <Stack
-                      direction="row"
-                      spacing={2}
-                      marginLeft={2}
-                      marginBottom={1}
-                    >
-                      <Button
-                        variant="contained"
-                        component="a"
-                        download
-                        href="/GradeTemplate.csv"
-                        startIcon={<DownloadIcon />}
-                      >
-                        grade template
-                      </Button>
-                    </Stack>
-                  </>
-                ),
-                EditField: (props) => {
-                  const { columnDef } = props;
-                  const newProps = {
-                    ...props,
-                    columnDef: {
-                      ...columnDef,
-                      title: columnDef.field,
-                    },
-                  };
-                  return <MTableEditField {...newProps} />;
-                },
-              }}
-              cellEditable={{
-                cellStyle: {},
-                onCellEditApproved: (
-                  newValue,
-                  oldValue,
-                  rowData,
-                  columnDef
-                ) => {
-                  if (newValue === oldValue)
-                    return new Promise((resolve, reject) => resolve());
-                  const { studentId, studentsClassesId } = rowData;
-                  const { field, gradeStructureId } = columnDef;
-                  const newData = [...data];
-                  const index = newData.findIndex(
-                    (i) => i.studentId === studentId
+                if (
+                  field === "studentId" ||
+                  field === "name" ||
+                  field === "average"
+                )
+                  return <MTableCell {...props} />;
+                else if (name === "Class average")
+                  return (
+                    <TableCell className="column-average">
+                      <Typography component="span">
+                        {props.rowData[field]}
+                      </Typography>
+                    </TableCell>
                   );
-                  newData[index][field] = newValue;
-                  if (newData[index][field + "Finalized"] === newValue)
-                    newData[index][field + "Status"] = "Finalized";
-                  else newData[index][field + "Status"] = "Drafted";
+                else {
+                  const { studentsClassesId } = props.rowData;
+                  const { field, gradeStructureId } = props.columnDef;
+                  return (
+                    <MTableCell {...props} className="custom-cell">
+                      <>
+                        <div className="cell-menu-wrapper">
+                          <CellMenu
+                            field={field}
+                            studentsClassesId={studentsClassesId}
+                            gradeStructureId={gradeStructureId}
+                            status={props.rowData[field + "Status"]}
+                            fetchRowsOnly={fetchRowsOnly}
+                          />
+                        </div>
+                        <Typography
+                          component="span"
+                          sx={{
+                            color: "text.secondary",
+                            fontSize: 13,
+                            textAlign: "left",
+                          }}
+                        >
+                          {props.rowData[field + "Status"]}
+                          {props.rowData[field + "Status"] === "Drafted" &&
+                            props.rowData[field + "Finalized"] && (
+                              <Typography
+                                sx={{
+                                  fontSize: 11,
+                                }}
+                              >
+                                Finalized: {props.rowData[field + "Finalized"]}
+                              </Typography>
+                            )}
+                        </Typography>
+                      </>
+                    </MTableCell>
+                  );
+                }
+              },
+              Toolbar: (props) => (
+                <>
+                  <MTableToolbar {...props} />
+                  <Stack
+                    direction="row"
+                    spacing={2}
+                    marginLeft={2}
+                    marginBottom={1}
+                  >
+                    <Button
+                      variant="contained"
+                      component="a"
+                      download
+                      href="/GradeTemplate.csv"
+                      startIcon={<DownloadIcon />}
+                      size="small"
+                    >
+                      grade template
+                    </Button>
+                  </Stack>
+                </>
+              ),
+              EditField: (props) => {
+                const { columnDef } = props;
+                const newProps = {
+                  ...props,
+                  columnDef: {
+                    ...columnDef,
+                    title: columnDef.field,
+                  },
+                };
+                return <MTableEditField {...newProps} />;
+              },
+            }}
+            cellEditable={{
+              cellStyle: {},
+              onCellEditApproved: (newValue, oldValue, rowData, columnDef) => {
+                if (newValue === oldValue)
+                  return new Promise((resolve, reject) => resolve());
+                const { studentId, studentsClassesId } = rowData;
+                const { field, gradeStructureId } = columnDef;
+                const newData = [...data];
+                const index = newData.findIndex(
+                  (i) => i.studentId === studentId
+                );
+                newData[index][field] = newValue;
+                if (newData[index][field + "Finalized"] === newValue)
+                  newData[index][field + "Status"] = "Finalized";
+                else newData[index][field + "Status"] = "Drafted";
 
-                  return new Promise((resolve, reject) => {
-                    axiosClient
-                      .post("/api/students-grades/", {
-                        studentsClasses_id: studentsClassesId,
-                        gradeStructure_id: gradeStructureId,
-                        grade: newValue,
-                      })
-                      .then(({ data }) => {
-                        setData(newData);
-                        resolve();
-                      })
-                      .catch((error) => {
-                        console.log(error);
-                        // if (error.response) {
-                        //   dispatch(setErrorMsg(error.response.data.error));
-                        // } else console.log(error);
-                      });
-                  });
+                return new Promise((resolve, reject) => {
+                  axiosClient
+                    .post("/api/students-grades/", {
+                      studentsClasses_id: studentsClassesId,
+                      gradeStructure_id: gradeStructureId,
+                      grade: newValue,
+                    })
+                    .then(({ data }) => {
+                      setData(newData);
+                      resolve();
+                    })
+                    .catch((error) => {
+                      console.log(error);
+                      // if (error.response) {
+                      //   dispatch(setErrorMsg(error.response.data.error));
+                      // } else console.log(error);
+                    });
+                });
+              },
+            }}
+            columns={[
+              {
+                title: "Student ID",
+                field: "studentId",
+                editable: "never",
+                width: 150,
+                render: (rowData) => {
+                  const { studentId, image } = rowData;
+                  if (typeof image === "string") return studentId;
+                  else
+                    return (
+                      <Typography sx={{ color: "text.secondary" }}>
+                        {studentId}
+                      </Typography>
+                    );
                 },
-              }}
-              columns={[
+              },
+              {
+                title: "Name",
+                field: "name",
+                editable: "never",
+                width: 200,
+                render: (rowData) => {
+                  const { name, image } = rowData;
+                  if (name === "Class average") return name;
+                  if (typeof image === "string") {
+                    return (
+                      <Stack direction="row" alignItems="center">
+                        <Avatar
+                          alt={name}
+                          src={image}
+                          sx={{ width: 30, height: 30, mr: 0.5 }}
+                        >
+                          {name.charAt(0)}
+                        </Avatar>
+                        {name}
+                      </Stack>
+                    );
+                  } else
+                    return (
+                      <Typography sx={{ color: "text.secondary" }}>
+                        {name}
+                      </Typography>
+                    );
+                },
+              },
+              {
+                title: "Average",
+                field: "average",
+                editable: "never",
+                width: 150,
+              },
+              ...columns,
+            ]}
+            data={data}
+            title="Grade Board"
+            options={{
+              rowStyle: {
+                fontFamily: "Roboto",
+              },
+              exportMenu: [
                 {
-                  title: "Student ID",
-                  field: "studentId",
-                  editable: "never",
-                  width: 150,
-                  render: (rowData) => {
-                    const { studentId, image } = rowData;
-                    if (typeof image === "string") return studentId;
-                    else
-                      return (
-                        <Typography sx={{ color: "text.secondary" }}>
-                          {studentId}
-                        </Typography>
-                      );
+                  label: "Export PDF",
+                  exportFunc: (cols, datas) => {
+                    const newCols = cols.map((col) => {
+                      if (typeof col.title === "object") {
+                        col.title = col.field;
+                      }
+                      return col;
+                    });
+                    return ExportPdf(cols, datas, "GradeBoardPDF");
                   },
                 },
                 {
-                  title: "Name",
-                  field: "name",
-                  editable: "never",
-                  width: 200,
-                  render: (rowData) => {
-                    const { name, image } = rowData;
-                    if (name === "Class average") return name;
-                    if (typeof image === "string") {
-                      return (
-                        <Stack direction="row" alignItems="center">
-                          <Avatar
-                            alt={name}
-                            src={image}
-                            sx={{ width: 30, height: 30, mr: 0.5 }}
-                          >
-                            {name.charAt(0)}
-                          </Avatar>
-                          {name}
-                        </Stack>
-                      );
-                    } else
-                      return (
-                        <Typography sx={{ color: "text.secondary" }}>
-                          {name}
-                        </Typography>
-                      );
+                  label: "Export CSV",
+                  exportFunc: (cols, datas) => {
+                    const newCols = cols.map((col) => {
+                      if (typeof col.title === "object") {
+                        col.title = col.field;
+                      }
+                      return col;
+                    });
+                    return ExportCsv(newCols, datas, "GradeBoardCSV");
                   },
                 },
-                {
-                  title: "Average",
-                  field: "average",
-                  editable: "never",
-                  width: 150,
-                },
-                ...columns,
-              ]}
-              data={data}
-              title="Grade Board"
-              options={{
-                rowStyle: {
-                  fontFamily: "Roboto",
-                },
-                exportMenu: [
-                  {
-                    label: "Export PDF",
-                    exportFunc: (cols, datas) => {
-                      const newCols = cols.map((col) => {
-                        if (typeof col.title === "object") {
-                          col.title = col.field;
-                        }
-                        return col;
-                      });
-                      return ExportPdf(cols, datas, "GradeBoardPDF");
-                    },
-                  },
-                  {
-                    label: "Export CSV",
-                    exportFunc: (cols, datas) => {
-                      const newCols = cols.map((col) => {
-                        if (typeof col.title === "object") {
-                          col.title = col.field;
-                        }
-                        return col;
-                      });
-                      return ExportCsv(newCols, datas, "GradeBoardCSV");
-                    },
-                  },
-                ],
-                tableLayout: "fixed",
-                //doubleHorizontalScroll: true,
-              }}
-            />
-          </div>
-        )}
+              ],
+              tableLayout: "fixed",
+              //doubleHorizontalScroll: true,
+            }}
+          />
+        </div>
       </Container>
     );
 };

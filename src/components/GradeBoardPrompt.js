@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 const Input = styled("input")({
   display: "none",
 });
-const GradeBoardPrompt = ({ classId, setHasStudentList, fetchData }) => {
+const GradeBoardPrompt = ({ classId, fetchData }) => {
   const dispatch = useDispatch();
   const [file, setFile] = useState(null);
   // On file select (from the pop up)
@@ -27,8 +27,7 @@ const GradeBoardPrompt = ({ classId, setHasStudentList, fetchData }) => {
         formData
       );
       dispatch(setSuccessMsg(res.data.message));
-      fetchData();
-      setHasStudentList(true);
+      await fetchData();
     } catch (error) {
       if (error.response) {
         dispatch(setErrorMsg(error.response.data.error));
@@ -37,19 +36,22 @@ const GradeBoardPrompt = ({ classId, setHasStudentList, fetchData }) => {
   };
   return (
     <>
-      <Typography color="secondary" sx={{ marginTop: 4, fontSize: 15 }}>
-        Please upload a student list first.
+      <Typography sx={{ color: "text.secondary", fontSize: 15 }}>
+        Upload a student list here.
       </Typography>
-      <Typography color="secondary" sx={{ fontSize: 15 }}>
-        Download the list template below. Upload the filled out list to start
-        marking your students.
-      </Typography>
+      {file ? (
+        <Typography sx={{ fontSize: 15 }}>
+          Selected file: {file.name}
+        </Typography>
+      ) : (
+        <></>
+      )}
       <Stack
         direction="row"
-        justifyContent="center"
+        justifyContent="end"
         spacing={2}
-        marginTop={4}
-        marginBottom={4}
+        marginTop={1}
+        marginBottom={3}
       >
         <Button
           variant="contained"
@@ -57,8 +59,9 @@ const GradeBoardPrompt = ({ classId, setHasStudentList, fetchData }) => {
           download
           href="/StudentListTemplate.csv"
           startIcon={<DownloadIcon />}
+          size="small"
         >
-          download template
+          student list template
         </Button>
         <label htmlFor="outlined-button-file">
           <Input
@@ -72,6 +75,7 @@ const GradeBoardPrompt = ({ classId, setHasStudentList, fetchData }) => {
             variant="outlined"
             component="span"
             startIcon={<AttachFileIcon />}
+            size="small"
           >
             pick file
           </Button>
@@ -82,15 +86,11 @@ const GradeBoardPrompt = ({ classId, setHasStudentList, fetchData }) => {
           onClick={onFileUpload}
           startIcon={<FileUploadIcon />}
           disabled={file ? false : true}
+          size="small"
         >
           upload list
         </Button>
       </Stack>
-      {file ? (
-        <Typography>Selected file: {file.name}</Typography>
-      ) : (
-        <Typography>Pick a file before pressing the Upload button</Typography>
-      )}
     </>
   );
 };
