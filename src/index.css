@@ -100,7 +100,7 @@ input[type="number"] {
   z-index: 999;
 }
 .table-container table:first-child tr th:first-child {
-  z-index: 9999;
+  z-index: 999;
 }
 .table-container table:first-child tr td:nth-child(2),
 .table-container table:first-child tr th:nth-child(2) {
@@ -109,12 +109,22 @@ input[type="number"] {
   z-index: 999;
 }
 .table-container table:first-child tr th:nth-child(2) {
-  z-index: 9999;
+  z-index: 999;
 }
-
+.custom-cell {
+  position: relative;
+}
 .custom-cell > * {
   float: right;
 }
 .custom-cell > button {
   margin-left: 5px;
+}
+.custom-cell > span {
+  /* float: left; */
+  position: absolute;
+  font-style: italic;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }

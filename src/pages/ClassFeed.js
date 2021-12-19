@@ -10,6 +10,7 @@ import {
   Typography,
   Button,
   Avatar,
+  Box,
 } from "@mui/material";
 import LinkIcon from "@mui/icons-material/Link";
 import EmailIcon from "@mui/icons-material/Email";
@@ -22,6 +23,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddNewModal from "../components/AddNewModal";
 import DeleteModal from "../components/DeleteModal";
+
 const ClassFeed = () => {
   const { classId } = useParams();
   const dispatch = useDispatch();
@@ -322,6 +324,7 @@ const ClassFeed = () => {
               paddingLeft: 3,
               paddingBottom: 2,
               paddingRight: 3,
+              mb: 3,
             }}
           >
             <Stack direction="row" marginBottom={1}>

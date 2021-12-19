@@ -3,27 +3,37 @@ import { Stack, Typography, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import DownloadIcon from "@mui/icons-material/Download";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import axiosClient from "../api/axiosClient";
+import { setErrorMsg, setSuccessMsg } from "../redux/alert";
+import { useDispatch } from "react-redux";
 const Input = styled("input")({
   display: "none",
 });
-const GradeBoardPrompt = () => {
+const GradeBoardPrompt = ({ classId, setHasStudentList, fetchData }) => {
+  const dispatch = useDispatch();
   const [file, setFile] = useState(null);
   // On file select (from the pop up)
   const onFileChange = (event) => {
     setFile(event.target.files[0]);
   };
-
   // On file upload (click the upload button)
   const onFileUpload = async () => {
-    // Create an object of formData
-    const formData = new FormData();
-
-    // Update the formData object
-    formData.append("file", file);
-
-    // // Request made to the backend api
-    // // Send formData object
-    console.log(formData);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await axiosClient.post(
+        "/api/files/upload-student-list?classId=" + classId,
+        formData
+      );
+      dispatch(setSuccessMsg(res.data.message));
+      fetchData();
+      setHasStudentList(true);
+    } catch (error) {
+      if (error.response) {
+        dispatch(setErrorMsg(error.response.data.error));
+      } else console.log(error);
+    }
   };
   return (
     <>
@@ -34,7 +44,13 @@ const GradeBoardPrompt = () => {
         Download the list template below. Upload the filled out list to start
         marking your students.
       </Typography>
-      <Stack direction="row" justifyContent="center" spacing={2} marginTop={4}>
+      <Stack
+        direction="row"
+        justifyContent="center"
+        spacing={2}
+        marginTop={4}
+        marginBottom={4}
+      >
         <Button
           variant="contained"
           component="a"
@@ -55,13 +71,26 @@ const GradeBoardPrompt = () => {
           <Button
             variant="outlined"
             component="span"
-            onClick={onFileUpload}
-            startIcon={<FileUploadIcon />}
+            startIcon={<AttachFileIcon />}
           >
-            upload list
+            pick file
           </Button>
         </label>
+        <Button
+          variant="outlined"
+          component="span"
+          onClick={onFileUpload}
+          startIcon={<FileUploadIcon />}
+          disabled={file ? false : true}
+        >
+          upload list
+        </Button>
       </Stack>
+      {file ? (
+        <Typography>Selected file: {file.name}</Typography>
+      ) : (
+        <Typography>Pick a file before pressing the Upload button</Typography>
+      )}
     </>
   );
 };

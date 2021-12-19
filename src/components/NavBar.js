@@ -116,7 +116,7 @@ const NavBar = () => {
                   isActive ? activeStyle : inactiveStyle
                 }
               >
-                <Typography sx={{ fontWeight: 500 }}>GradeBoard</Typography>
+                <Typography sx={{ fontWeight: 500 }}>Grade Board</Typography>
               </NavLink>
             ) : (
               <></>
