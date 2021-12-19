@@ -95,6 +95,8 @@ input[type="number"] {
 }
 .table-container table:first-child tr td:first-child,
 .table-container table:first-child tr th:first-child {
+  background-color: #ffffff;
+  background-clip: padding-box;
   position: sticky;
   left: 0;
   z-index: 999;
@@ -104,6 +106,8 @@ input[type="number"] {
 }
 .table-container table:first-child tr td:nth-child(2),
 .table-container table:first-child tr th:nth-child(2) {
+  background-color: #ffffff;
+  background-clip: padding-box;
   position: sticky;
   left: 150px;
   z-index: 999;
@@ -111,20 +115,40 @@ input[type="number"] {
 .table-container table:first-child tr th:nth-child(2) {
   z-index: 999;
 }
+.custom-header {
+  display: flex;
+  align-items: center;
+}
 .custom-cell {
   position: relative;
 }
-.custom-cell > * {
-  float: right;
+.custom-cell > div {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 50px;
 }
-.custom-cell > button {
-  margin-left: 5px;
+.custom-cell > .cell-menu-wrapper {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: inherit;
 }
 .custom-cell > span {
-  /* float: left; */
   position: absolute;
   font-style: italic;
   left: 0;
   top: 50%;
   transform: translateY(-50%);
+  padding: inherit;
+}
+.column-average {
+  position: relative;
+}
+.column-average > span {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 50px;
 }

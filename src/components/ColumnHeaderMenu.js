@@ -89,7 +89,11 @@ const ColumnHeaderMenu = ({
   let canFinalize = true;
   if (data.some((row) => row[field + "Status"] === "New")) {
     canFinalize = false;
-  } else if (data.every((row) => row[field + "Status"] === "Finalized")) {
+  } else if (
+    data
+      .filter((row) => row.studentId !== "")
+      .every((row) => row[field + "Status"] === "Finalized")
+  ) {
     canFinalize = false;
   }
   return (

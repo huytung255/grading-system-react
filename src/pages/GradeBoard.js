@@ -1,4 +1,11 @@
-import { Container, Button, Stack, Avatar, Typography } from "@mui/material";
+import {
+  Container,
+  Button,
+  Stack,
+  Avatar,
+  Typography,
+  TableCell,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
 import MaterialTable, {
@@ -44,36 +51,45 @@ const GradeBoard = () => {
     const res = await axiosClient.get(
       "/api/classes/" + classId + "/students-gradeboard"
     );
-    const { allStudent, studentGrades } = res.data;
-    setData(
-      allStudent.map((student, index) => {
-        const { fullName, student_id, image } = student;
-        const { studentsClasses_id } = studentGrades[index][0];
-        let row = {
-          studentId: student_id,
-          name: fullName,
-          studentsClassesId: studentsClasses_id,
-        };
-        if (typeof image === "string") row.image = image;
-        studentGrades[index].forEach((studentGrade) => {
-          const { gradeTitle, grade, finalizedGrade } = studentGrade;
-          if (gradeTitle) {
-            row[gradeTitle] = grade ? grade : 0;
-            row[gradeTitle + "Finalized"] = finalizedGrade;
-            row[gradeTitle + "Status"] = grade
-              ? finalizedGrade === grade
-                ? "Finalized"
-                : "Drafted"
-              : "New";
-          } else {
-            const { averagePoint } = studentGrade;
-            row.average = averagePoint;
-          }
-          return;
-        });
-        return row;
-      })
-    );
+    const { allStudent, studentGrades, averagePoint } = res.data;
+    const newData = allStudent.map((student, index) => {
+      const { fullName, student_id, image } = student;
+      const { studentsClasses_id } = studentGrades[index][0];
+      let row = {
+        studentId: student_id,
+        name: fullName,
+        studentsClassesId: studentsClasses_id,
+      };
+      if (typeof image === "string") row.image = image;
+      studentGrades[index].forEach((studentGrade) => {
+        const { gradeTitle, grade, finalizedGrade } = studentGrade;
+        if (typeof gradeTitle === "string") {
+          row[gradeTitle] = grade ? grade : 0;
+          row[gradeTitle + "Finalized"] = finalizedGrade;
+          row[gradeTitle + "Status"] = grade
+            ? finalizedGrade === grade
+              ? "Finalized"
+              : "Drafted"
+            : "New";
+        } else {
+          const { averagePoint } = studentGrade;
+          row.average = averagePoint;
+        }
+        return;
+      });
+      return row;
+    });
+    const classAverage = {
+      studentId: "",
+      name: "Class average",
+    };
+    averagePoint.forEach((point) => {
+      if (typeof point.gradeTitle === "string")
+        classAverage[point.gradeTitle] = point.averagePoint;
+      else classAverage.average = point.averagePoint;
+    });
+    newData.unshift(classAverage);
+    setData(newData);
   };
   useUpdateEffect(() => {
     setColumns((prev) => {
@@ -81,7 +97,7 @@ const GradeBoard = () => {
       newCols.forEach(
         (col) =>
           (col.title = (
-            <>
+            <div className="custom-header">
               {col.field}: {col.gradeDetail}
               <ColumnHeaderMenu
                 field={col.field}
@@ -90,7 +106,7 @@ const GradeBoard = () => {
                 classId={classId}
                 fetchRowsOnly={fetchRowsOnly}
               />
-            </>
+            </div>
           ))
       );
       return newCols;
@@ -105,7 +121,7 @@ const GradeBoard = () => {
     console.log(res.data);
     if (allStudent.length !== 0) {
       setHasStudentList(true);
-      const { gradeStructureList, studentGrades } = res.data;
+      const { gradeStructureList, studentGrades, averagePoint } = res.data;
 
       setColumns(
         gradeStructureList.map((grade) => {
@@ -132,36 +148,45 @@ const GradeBoard = () => {
           };
         })
       );
-      setData(
-        allStudent.map((student, index) => {
-          const { fullName, student_id, image } = student;
-          const { studentsClasses_id } = studentGrades[index][0];
+      const newData = allStudent.map((student, index) => {
+        const { fullName, student_id, image } = student;
+        const { studentsClasses_id } = studentGrades[index][0];
 
-          let row = {
-            studentId: student_id,
-            name: fullName,
-            studentsClassesId: studentsClasses_id,
-          };
-          if (typeof image === "string") row.image = image;
-          studentGrades[index].forEach((studentGrade) => {
-            const { gradeTitle, grade, finalizedGrade } = studentGrade;
-            if (gradeTitle) {
-              row[gradeTitle] = grade ? grade : 0;
-              row[gradeTitle + "Finalized"] = finalizedGrade;
-              row[gradeTitle + "Status"] = grade
-                ? finalizedGrade === grade
-                  ? "Finalized"
-                  : "Drafted"
-                : "New";
-            } else {
-              const { averagePoint } = studentGrade;
-              row.average = averagePoint;
-            }
-            return;
-          });
-          return row;
-        })
-      );
+        let row = {
+          studentId: student_id,
+          name: fullName,
+          studentsClassesId: studentsClasses_id,
+        };
+        if (typeof image === "string") row.image = image;
+        studentGrades[index].forEach((studentGrade) => {
+          const { gradeTitle, grade, finalizedGrade } = studentGrade;
+          if (typeof gradeTitle === "string") {
+            row[gradeTitle] = grade ? grade : 0;
+            row[gradeTitle + "Finalized"] = finalizedGrade;
+            row[gradeTitle + "Status"] = grade
+              ? finalizedGrade === grade
+                ? "Finalized"
+                : "Drafted"
+              : "New";
+          } else {
+            const { averagePoint } = studentGrade;
+            row.average = averagePoint;
+          }
+          return;
+        });
+        return row;
+      });
+      const classAverage = {
+        studentId: "",
+        name: "Class average",
+      };
+      averagePoint.forEach((point) => {
+        if (typeof point.gradeTitle === "string")
+          classAverage[point.gradeTitle] = point.averagePoint;
+        else classAverage.average = point.averagePoint;
+      });
+      newData.unshift(classAverage);
+      setData(newData);
     } else setHasStudentList(false);
   };
 
@@ -188,25 +213,37 @@ const GradeBoard = () => {
               components={{
                 Cell: (props) => {
                   const { field } = props.columnDef;
+                  const { name } = props.rowData;
+
                   if (
                     field === "studentId" ||
                     field === "name" ||
                     field === "average"
                   )
                     return <MTableCell {...props} />;
+                  else if (name === "Class average")
+                    return (
+                      <TableCell className="column-average">
+                        <Typography component="span">
+                          {props.rowData[field]}
+                        </Typography>
+                      </TableCell>
+                    );
                   else {
                     const { studentsClassesId } = props.rowData;
                     const { field, gradeStructureId } = props.columnDef;
                     return (
                       <MTableCell {...props} className="custom-cell">
                         <>
-                          <CellMenu
-                            field={field}
-                            studentsClassesId={studentsClassesId}
-                            gradeStructureId={gradeStructureId}
-                            status={props.rowData[field + "Status"]}
-                            fetchRowsOnly={fetchRowsOnly}
-                          />
+                          <div className="cell-menu-wrapper">
+                            <CellMenu
+                              field={field}
+                              studentsClassesId={studentsClassesId}
+                              gradeStructureId={gradeStructureId}
+                              status={props.rowData[field + "Status"]}
+                              fetchRowsOnly={fetchRowsOnly}
+                            />
+                          </div>
                           <Typography
                             component="span"
                             sx={{
@@ -283,7 +320,10 @@ const GradeBoard = () => {
                     (i) => i.studentId === studentId
                   );
                   newData[index][field] = newValue;
-                  newData[index][field + "Status"] = "Drafted";
+                  if (newData[index][field + "Finalized"] === newValue)
+                    newData[index][field + "Status"] = "Finalized";
+                  else newData[index][field + "Status"] = "Drafted";
+
                   return new Promise((resolve, reject) => {
                     axiosClient
                       .post("/api/students-grades/", {
@@ -328,6 +368,7 @@ const GradeBoard = () => {
                   width: 200,
                   render: (rowData) => {
                     const { name, image } = rowData;
+                    if (name === "Class average") return name;
                     if (typeof image === "string") {
                       return (
                         <Stack direction="row" alignItems="center">
