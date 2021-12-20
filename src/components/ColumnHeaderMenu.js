@@ -87,15 +87,20 @@ const ColumnHeaderMenu = ({
     setFile(null);
   };
   let canFinalize = true;
-  if (data.some((row) => row[field + "Status"] === "New")) {
-    canFinalize = false;
-  } else if (
-    data
-      .filter((row) => row.studentId !== "")
-      .every((row) => row[field + "Status"] === "Finalized")
-  ) {
+  if (data.every((row) => row[field + "Status"] !== "Drafted")) {
     canFinalize = false;
   }
+  // if (data.some((row) => row[field + "Status"] === "New")) {
+  //   canFinalize = false;
+  // }
+  // else
+  // if (
+  //   data
+  //     .filter((row) => row.studentId !== "")
+  //     .every((row) => row[field + "Status"] === "Finalized")
+  // ) {
+  //   canFinalize = false;
+  // }
   return (
     <>
       <IconButton color="primary" size="small" onClick={handleClick}>

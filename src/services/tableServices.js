@@ -10,7 +10,10 @@ export const processRows = (resData, setData) => {
       studentsClassesId: studentsClasses_id,
     };
     if (typeof image === "string") row.image = image;
-    studentGrades[index].forEach((studentGrade) => {
+    const studentGradesIndex = studentGrades.findIndex(
+      (e) => e[0].student_id === student_id
+    );
+    studentGrades[studentGradesIndex].forEach((studentGrade) => {
       const { gradeTitle, grade, finalizedGrade } = studentGrade;
       if (typeof gradeTitle === "string") {
         row[gradeTitle] = grade ? grade : 0;

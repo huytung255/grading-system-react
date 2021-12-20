@@ -52,6 +52,7 @@ const GradeBoard = () => {
     const res = await axiosClient.get(
       "/api/classes/" + classId + "/students-gradeboard"
     );
+    console.log("rows only", res.data);
     processRows(res.data, setData);
   };
   //refresh columns
@@ -62,6 +63,7 @@ const GradeBoard = () => {
     const res = await axiosClient.get(
       "/api/classes/" + classId + "/students-gradeboard"
     );
+    console.log("data", res.data);
     processColumns(res.data, data, classId, setColumns, fetchRowsOnly);
     processRows(res.data, setData);
   };
