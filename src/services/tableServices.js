@@ -3,16 +3,16 @@ export const processRows = (resData, setData) => {
   const { allStudent, studentGrades, averagePoint } = resData;
   const newData = allStudent.map((student, index) => {
     const { fullName, student_id, image } = student;
-    const { studentsClasses_id } = studentGrades[index][0];
+    const studentGradesIndex = studentGrades.findIndex(
+      (e) => e[0].student_id === student_id
+    );
+    const { studentsClasses_id } = studentGrades[studentGradesIndex][0];
     let row = {
       studentId: student_id,
       name: fullName,
       studentsClassesId: studentsClasses_id,
     };
     if (typeof image === "string") row.image = image;
-    const studentGradesIndex = studentGrades.findIndex(
-      (e) => e[0].student_id === student_id
-    );
     studentGrades[studentGradesIndex].forEach((studentGrade) => {
       const { gradeTitle, grade, finalizedGrade } = studentGrade;
       if (typeof gradeTitle === "string") {
