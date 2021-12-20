@@ -5,6 +5,7 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemText,
+  CircularProgress,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -14,6 +15,7 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch } from "react-redux";
 import { setErrorMsg, setSuccessMsg } from "../redux/alert";
+import CheckIcon from "@mui/icons-material/Check";
 const Input = styled("input")({
   display: "none",
 });
@@ -28,6 +30,7 @@ const ColumnHeaderMenu = ({
   const [file, setFile] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [isFinalizing, setIsFinalizing] = useState(false);
   const open = Boolean(anchorEl);
   // On file select (from the pop up)
   const onFileChange = (event) => {
@@ -65,7 +68,7 @@ const ColumnHeaderMenu = ({
   };
   const handleFinalizeColumn = async (event) => {
     event.stopPropagation();
-    setIsUploading(true);
+    setIsFinalizing(true);
     try {
       await axiosClient.put("/api/students-grades/mark-all-as-finalized", {
         gradeStructure_id: gradeStructureId,
@@ -79,7 +82,7 @@ const ColumnHeaderMenu = ({
     } catch (error) {
       console.log(error);
     }
-    setIsUploading(false);
+    setIsFinalizing(false);
     setAnchorEl(null);
   };
   const removeFile = (event) => {
@@ -113,7 +116,7 @@ const ColumnHeaderMenu = ({
         onClose={handleClose}
       >
         {file && (
-          <MenuItem onClick={removeFile} disabled={isUploading}>
+          <MenuItem onClick={removeFile} disabled={isUploading || isFinalizing}>
             <ListItemIcon>
               <DeleteIcon fontSize="small" />
             </ListItemIcon>
@@ -121,9 +124,16 @@ const ColumnHeaderMenu = ({
           </MenuItem>
         )}
         {file && (
-          <MenuItem onClick={onFileUpload} disabled={isUploading}>
+          <MenuItem
+            onClick={onFileUpload}
+            disabled={isUploading || isFinalizing}
+          >
             <ListItemIcon>
-              <FileUploadIcon fontSize="small" />
+              {isUploading ? (
+                <CircularProgress size={17} />
+              ) : (
+                <FileUploadIcon fontSize="small" />
+              )}
             </ListItemIcon>
             <ListItemText>Upload grade</ListItemText>
           </MenuItem>
@@ -138,15 +148,24 @@ const ColumnHeaderMenu = ({
             onChange={onFileChange}
             onClick={(event) => event.stopPropagation()}
           />
-          <MenuItem onClick={(event) => event.stopPropagation()}>
+          <MenuItem
+            onClick={(event) => event.stopPropagation()}
+            disabled={isUploading || isFinalizing}
+          >
             <ListItemIcon>
               <AttachFileIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText>Pick file</ListItemText>
           </MenuItem>
         </label>
-        <MenuItem onClick={handleFinalizeColumn} disabled={!canFinalize}>
-          Finalize column
+        <MenuItem
+          onClick={handleFinalizeColumn}
+          disabled={!canFinalize || isUploading || isFinalizing}
+        >
+          <ListItemIcon>
+            {isFinalizing ? <CircularProgress size={17} /> : <CheckIcon />}
+          </ListItemIcon>
+          <ListItemText>Finalize column</ListItemText>
         </MenuItem>
       </Menu>
     </>

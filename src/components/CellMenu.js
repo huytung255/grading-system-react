@@ -1,6 +1,13 @@
 import React, { useState } from "react";
-import { IconButton, Menu, MenuItem } from "@mui/material";
-
+import {
+  IconButton,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+  CircularProgress,
+} from "@mui/material";
+import CheckIcon from "@mui/icons-material/Check";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import axiosClient from "../api/axiosClient";
 const CellMenu = ({
@@ -11,6 +18,7 @@ const CellMenu = ({
   fetchRowsOnly,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isFinalizing, setIsFinalizing] = useState(false);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     event.stopPropagation();
@@ -18,6 +26,7 @@ const CellMenu = ({
   };
   const handleFinalize = async (event) => {
     event.stopPropagation();
+    setIsFinalizing(true);
     try {
       await axiosClient.put("/api/students-grades/mark-as-finalized", {
         studentsClasses_id: studentsClassesId,
@@ -35,6 +44,7 @@ const CellMenu = ({
     } catch (error) {
       console.log(error);
     }
+    setIsFinalizing(false);
     setAnchorEl(null);
   };
   const handleClose = (event) => {
@@ -54,9 +64,12 @@ const CellMenu = ({
       >
         <MenuItem
           onClick={handleFinalize}
-          disabled={status === "Finalized" || status === "New"}
+          disabled={status === "Finalized" || status === "New" || isFinalizing}
         >
-          Finalize
+          <ListItemIcon>
+            {isFinalizing ? <CircularProgress size={17} /> : <CheckIcon />}
+          </ListItemIcon>
+          <ListItemText>Finalize</ListItemText>
         </MenuItem>
       </Menu>
     </>
