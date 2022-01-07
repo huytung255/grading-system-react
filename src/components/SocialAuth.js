@@ -2,7 +2,7 @@ import React from "react";
 import { Box, IconButton } from "@mui/material";
 import { createSvgIcon } from "@mui/material/utils";
 import { useDispatch } from "react-redux";
-import { setIsAuthenticated, setToken } from "../redux/user";
+import { setIsAuthenticated, setToken, setUserId } from "../redux/user";
 import { useNavigate } from "react-router-dom";
 const GoogleIcon = createSvgIcon(
   <>
@@ -66,9 +66,11 @@ const SocialAuth = ({ pathname, search }) => {
     try {
       if (event.data.token) {
         window.removeEventListener("message", messageFn);
-        const { token } = event.data;
+        const { token, id } = event.data;
         localStorage.setItem("token", token);
+        localStorage.setItem("userId", id);
         dispatch(setToken(token));
+        dispatch(setUserId(id));
         dispatch(setIsAuthenticated(true));
         if (search === "") {
           navigate(pathname);

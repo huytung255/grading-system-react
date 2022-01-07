@@ -93,24 +93,39 @@ input[type="number"] {
   text-transform: uppercase;
   letter-spacing: 2px; */
 }
-.table-container table:first-child tr td:first-child,
-.table-container table:first-child tr th:first-child {
-  background-color: #ffffff;
-  background-clip: padding-box;
-  position: sticky;
-  left: 0;
+/* For mobile phones: */
+
+/* .table-container table:first-child tr th:first-child {
   z-index: 999;
-}
-.table-container table:first-child tr th:first-child {
-  z-index: 999;
-}
+} */
 .table-container table:first-child tr td:nth-child(2),
 .table-container table:first-child tr th:nth-child(2) {
   background-color: #ffffff;
   background-clip: padding-box;
   position: sticky;
-  left: 150px;
+  left: 0px;
   z-index: 999;
+}
+
+@media only screen and (min-width: 992px) {
+  /* For tablets & desktop: */
+  .table-container table:first-child tr td:first-child,
+  .table-container table:first-child tr th:first-child {
+    background-color: #ffffff;
+    background-clip: padding-box;
+    position: sticky;
+    left: 0;
+    z-index: 999;
+  }
+
+  .table-container table:first-child tr td:nth-child(2),
+  .table-container table:first-child tr th:nth-child(2) {
+    background-color: #ffffff;
+    background-clip: padding-box;
+    position: sticky;
+    left: 150px;
+    z-index: 999;
+  }
 }
 .table-container table:first-child tr th:nth-child(2) {
   z-index: 999;

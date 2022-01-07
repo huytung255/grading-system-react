@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useDispatch } from "react-redux";
-import { setIsAuthenticated, setToken } from "../redux/user";
+import { setIsAuthenticated, setToken, setUserId } from "../redux/user";
 import { useNavigate, useLocation, NavLink } from "react-router-dom";
 import SocialAuth from "../components/SocialAuth";
 import MyDivider from "../components/MyDivider";
@@ -32,9 +32,11 @@ export default function SignIn() {
         password: data.get("password"),
       });
       setLoading(false);
-      const { token } = res.data;
+      const { token, id } = res.data;
       localStorage.setItem("token", token);
+      localStorage.setItem("userId", id);
       dispatch(setToken(token));
+      dispatch(setUserId(id));
       dispatch(setIsAuthenticated(true));
 
       if (state) {

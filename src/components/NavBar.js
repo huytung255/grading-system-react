@@ -7,7 +7,7 @@ import {
   MenuItem,
   Menu,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+import classNav from "../constants/classNav";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import React, { useState } from "react";
 import axiosClient from "../api/axiosClient";
@@ -20,6 +20,8 @@ import {
 } from "react-router-dom";
 import { setIsAuthenticated } from "../redux/user";
 import { useDispatch } from "react-redux";
+import NavDrawer from "./NavDrawer";
+
 const NavBar = () => {
   let navigate = useNavigate();
   const dispatch = useDispatch();
@@ -27,6 +29,7 @@ const NavBar = () => {
   const { classId } = useParams();
   const [anchorEl, setAnchorEl] = useState(null);
   const [isTeacher, setIsTeacher] = useState(false);
+
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -71,15 +74,8 @@ const NavBar = () => {
   return (
     <AppBar position="sticky" elevation={1}>
       <Toolbar>
-        <IconButton
-          size="large"
-          edge="start"
-          color="inherit"
-          aria-label="menu"
-          sx={{ mr: 2 }}
-        >
-          <MenuIcon />
-        </IconButton>
+        {match ? <NavDrawer isTeacher={isTeacher} classId={classId} /> : <></>}
+
         <NavLink
           to="/"
           style={{ flexGrow: 1, textDecoration: "none", color: "inherit" }}
@@ -95,32 +91,29 @@ const NavBar = () => {
             flexGrow={1}
             height="100%"
             position="absolute"
-            sx={{ left: "50%", top: "50%", transform: "translate(-50%,-50%)" }}
+            sx={{
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%,-50%)",
+              display: { xs: "none", lg: "flex" },
+            }}
           >
-            <NavLink
-              to={"/class/" + classId + "/feed"}
-              style={({ isActive }) => (isActive ? activeStyle : inactiveStyle)}
-            >
-              <Typography sx={{ fontWeight: 500 }}>Feed</Typography>
-            </NavLink>
-            <NavLink
-              to={"/class/" + classId + "/participants"}
-              style={({ isActive }) => (isActive ? activeStyle : inactiveStyle)}
-            >
-              <Typography sx={{ fontWeight: 500 }}>Participants</Typography>
-            </NavLink>
-            {isTeacher ? (
-              <NavLink
-                to={"/class/" + classId + "/gradeBoard"}
-                style={({ isActive }) =>
-                  isActive ? activeStyle : inactiveStyle
-                }
-              >
-                <Typography sx={{ fontWeight: 500 }}>Grade Board</Typography>
-              </NavLink>
-            ) : (
-              <></>
-            )}
+            {classNav.map((item, i) => {
+              const { url, name, role } = item;
+              if (role === "teacher" && !isTeacher)
+                return <React.Fragment key={i}></React.Fragment>;
+              return (
+                <NavLink
+                  key={i}
+                  to={"/class/" + classId + url}
+                  style={({ isActive }) =>
+                    isActive ? activeStyle : inactiveStyle
+                  }
+                >
+                  <Typography sx={{ fontWeight: 500 }}>{name}</Typography>
+                </NavLink>
+              );
+            })}
           </Stack>
         ) : (
           <></>

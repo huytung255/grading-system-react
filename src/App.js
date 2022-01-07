@@ -16,6 +16,8 @@ import Profile from "./pages/Profile";
 import NewPassword from "./pages/NewPassword";
 import EditGradeStructure from "./pages/EditGradeStructure";
 import GradeBoard from "./pages/GradeBoard";
+import GradeDetails from "./pages/GradeDetails";
+import StudentRequests from "./pages/StudentRequests";
 function App() {
   const theme = createTheme({
     palette: {
@@ -39,17 +41,6 @@ function App() {
       <SuccessSnackbar />
       <BrowserRouter>
         <Routes>
-          {/* {["/", "class"].map((p, i) => (
-            <Route
-              key={i}
-              path={p}
-              element={
-                <RequireAuth>
-                  <Home />
-                </RequireAuth>
-              }
-            />
-          ))} */}
           <Route
             path="/"
             element={
@@ -87,6 +78,22 @@ function App() {
             element={
               <RequireAuth>
                 <GradeBoard />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/class/:classId/gradeDetails/:studentGradeId"
+            element={
+              <RequireAuth>
+                <GradeDetails />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/class/:classId/studentRequests"
+            element={
+              <RequireAuth>
+                <StudentRequests />
               </RequireAuth>
             }
           />

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   Container,
   Grid,
@@ -10,7 +10,6 @@ import {
   Typography,
   Button,
   Avatar,
-  Box,
 } from "@mui/material";
 import LinkIcon from "@mui/icons-material/Link";
 import EmailIcon from "@mui/icons-material/Email";
@@ -23,18 +22,20 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddNewModal from "../components/AddNewModal";
 import DeleteModal from "../components/DeleteModal";
-
+import GradeStructure from "../components/GradeStructure";
+import StudentGrade from "../components/StudentGrade";
+import TeacherShortcut from "../components/TeacherShortcut";
 const ClassFeed = () => {
   const { classId } = useParams();
   const dispatch = useDispatch();
-  const [role, setRole] = useState("student");
+  const [role, setRole] = useState();
   const [classInfo, setClassInfo] = useState({
     name: "",
     section: "",
     subject: "",
     room: "",
   });
-  const [gradeStructure, setGradeStructure] = useState([]);
+
   const [openInviteLink, setOpenInviteLink] = useState(false);
   const [openInviteByEmail, setOpenInviteByEmail] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -60,17 +61,6 @@ const ClassFeed = () => {
         subject: subject,
         room: room,
       });
-      const res2 = await axiosClient.get(
-        "/api/classes/" + classId + "/grade-structure"
-      );
-      setGradeStructure(
-        res2.data.map((grade) => {
-          return {
-            title: grade.gradeTitle,
-            percentage: Number(grade.gradeDetail),
-          };
-        })
-      );
     } catch (error) {
       // console.log(error);
       if (error.response) {
@@ -196,93 +186,8 @@ const ClassFeed = () => {
         )}
       </Card>
       <Grid container spacing={3}>
-        <Grid item xs={3}>
-          <Paper
-            sx={{
-              p: 1.5,
-              pb: 2,
-              mb: 1,
-              borderRadius: 2,
-            }}
-          >
-            <Typography
-              sx={{
-                fontSize: 17,
-                fontWeight: 700,
-                color: "secondary.main",
-              }}
-            >
-              Grade Structure
-            </Typography>
-            {gradeStructure.length === 0 ? (
-              <></>
-            ) : (
-              <Stack direction="row" marginBottom={1}>
-                <Typography
-                  sx={{
-                    fontSize: 15,
-                    fontWeight: 500,
-                    color: "secondary.main",
-                    width: "100%",
-                  }}
-                >
-                  Total
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: 15,
-                    fontWeight: 500,
-                    color: "secondary.main",
-                  }}
-                >
-                  {gradeStructure.reduce(
-                    (prev, current) => prev + current.percentage,
-                    0
-                  )}
-                </Typography>
-              </Stack>
-            )}
-
-            {gradeStructure.map((grade, i) => (
-              <Stack direction="row" key={i}>
-                <Typography
-                  sx={{
-                    fontSize: 14,
-                    fontWeight: 500,
-                    color: "secondary.main",
-                    width: "100%",
-                  }}
-                >
-                  {grade.title}
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: 14,
-                    fontWeight: 500,
-                    color: "secondary.main",
-                  }}
-                >
-                  {grade.percentage}
-                </Typography>
-              </Stack>
-            ))}
-            {role === "teacher" ? (
-              <Button
-                component={Link}
-                to={`/class/${classId}/feed/edit-grade-structure`}
-                fullWidth
-                variant="text"
-                startIcon={<EditIcon />}
-                sx={{
-                  mt: 1,
-                }}
-              >
-                Edit
-              </Button>
-            ) : (
-              <></>
-            )}
-          </Paper>
+        <Grid item xs={12} md={3}>
+          <GradeStructure classId={classId} role={role} />
           {role === "teacher" ? (
             <>
               <Button
@@ -316,39 +221,9 @@ const ClassFeed = () => {
             <></>
           )}
         </Grid>
-        <Grid item xs={9}>
-          <Paper
-            sx={{
-              width: "100%",
-              paddingTop: 2,
-              paddingLeft: 3,
-              paddingBottom: 2,
-              paddingRight: 3,
-              mb: 3,
-            }}
-          >
-            <Stack direction="row" marginBottom={1}>
-              <Avatar
-                alt="Remy Sharp"
-                src="https://i.pravatar.cc/300"
-                sx={{ width: 50, height: 50 }}
-              />
-              <Stack direction="column" width="100%" marginLeft={2}>
-                <Typography sx={{ fontWeight: 500, color: "text.primary" }}>
-                  Remy Sharp
-                </Typography>
-                <Typography sx={{ fontSize: 12, color: "text.secondary" }}>
-                  18 Nov
-                </Typography>
-              </Stack>
-            </Stack>
-            <Typography sx={{ fontSize: 14, color: "text.primary" }}>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro
-              reprehenderit quaerat iure architecto molestias eveniet. Aliquid
-              fugit fuga ab tempora et illo perferendis harum, eos illum dolorum
-              vel commodi aspernatur.
-            </Typography>
-          </Paper>
+        <Grid item xs={12} md={9}>
+          {role === "student" && <StudentGrade classId={classId} />}
+          {role === "teacher" && <TeacherShortcut classId={classId} />}
         </Grid>
       </Grid>
     </Container>
