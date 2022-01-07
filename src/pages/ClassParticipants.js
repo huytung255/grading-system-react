@@ -11,7 +11,7 @@ import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import InviteByEmailModal from "../components/InviteByEmailModal";
 import { setErrorMsg } from "../redux/alert";
 import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axiosClient from "../api/axiosClient";
 const ClassParticipants = () => {
   const { classId } = useParams();
@@ -39,10 +39,10 @@ const ClassParticipants = () => {
     try {
       const res = await axiosClient.get("/api/classes/" + classId);
       const { userRole } = res.data;
-      console.log(res);
+
       setRole(userRole);
       const res2 = await axiosClient.get("/api/classes/" + classId + "/people");
-      console.log(res2);
+
       const { students, teachers } = res2.data;
       setStudents({
         list: [...students.students_list],
@@ -158,7 +158,7 @@ const ClassParticipants = () => {
       </Stack>
       <Paper sx={{ p: 2 }} elevation={0}>
         {students.list.map((student) => {
-          const { id, name, image } = student;
+          const { id, name, image, student_id } = student;
           return (
             <Stack
               direction="row"
@@ -166,17 +166,44 @@ const ClassParticipants = () => {
               marginBottom={2}
               key={id}
             >
-              <Avatar alt={name} src={image} sx={{ width: 45, height: 45 }}>
-                {name.charAt(0)}
-              </Avatar>
-              <Typography
-                sx={{
-                  fontWeight: 500,
-                  marginLeft: 2,
-                }}
-              >
-                {name}
-              </Typography>
+              {role === "teacher" && student_id ? (
+                <>
+                  <Avatar
+                    component={Link}
+                    to={`/class/${classId}/studentGrades/${student_id}`}
+                    alt={name}
+                    src={image}
+                    sx={{ width: 45, height: 45, textDecoration: "none" }}
+                  >
+                    {name.charAt(0)}
+                  </Avatar>
+                  <Typography
+                    component={Link}
+                    to={`/class/${classId}/studentGrades/${student_id}`}
+                    sx={{
+                      fontWeight: 500,
+                      marginLeft: 2,
+                      color: "inherit",
+                    }}
+                  >
+                    {name}
+                  </Typography>
+                </>
+              ) : (
+                <>
+                  <Avatar alt={name} src={image} sx={{ width: 45, height: 45 }}>
+                    {name.charAt(0)}
+                  </Avatar>
+                  <Typography
+                    sx={{
+                      fontWeight: 500,
+                      marginLeft: 2,
+                    }}
+                  >
+                    {name}
+                  </Typography>
+                </>
+              )}
             </Stack>
           );
         })}

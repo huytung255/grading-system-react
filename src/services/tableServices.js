@@ -6,6 +6,12 @@ export const processRows = (resData, setData) => {
     const studentGradesIndex = studentGrades.findIndex(
       (e) => e[0].student_id === student_id
     );
+    if (studentGradesIndex === -1)
+      return {
+        studentId: student_id,
+        name: fullName,
+        average: 0,
+      };
     const { studentsClasses_id } = studentGrades[studentGradesIndex][0];
     let row = {
       studentId: student_id,
@@ -14,11 +20,14 @@ export const processRows = (resData, setData) => {
     };
     if (typeof image === "string") row.image = image;
     studentGrades[studentGradesIndex].forEach((studentGrade) => {
-      const { gradeTitle, grade, finalizedGrade } = studentGrade;
+      const { gradeTitle, grade, finalizedGrade, isFinalDecision } =
+        studentGrade;
       if (typeof gradeTitle === "string") {
         row[gradeTitle] = grade ? grade : 0;
         row[gradeTitle + "Finalized"] = finalizedGrade;
-        row[gradeTitle + "Status"] = grade
+        row[gradeTitle + "Status"] = Boolean(isFinalDecision)
+          ? "Reviewed"
+          : grade
           ? finalizedGrade === grade
             ? "Finalized"
             : "Drafted"

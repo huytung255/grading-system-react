@@ -29,6 +29,7 @@ import {
   processColumns,
   processRows,
 } from "../services/tableServices";
+import CustomCell from "../components/CustomCell";
 const GradeBoard = () => {
   const dispatch = useDispatch();
   const { classId } = useParams();
@@ -91,64 +92,9 @@ const GradeBoard = () => {
         <div className="table-container">
           <MaterialTable
             components={{
-              Cell: (props) => {
-                const { field } = props.columnDef;
-                const { name } = props.rowData;
-
-                if (
-                  field === "studentId" ||
-                  field === "name" ||
-                  field === "average"
-                )
-                  return <MTableCell {...props} />;
-                else if (name === "Class average")
-                  return (
-                    <TableCell className="column-average">
-                      <Typography component="span">
-                        {props.rowData[field]}
-                      </Typography>
-                    </TableCell>
-                  );
-                else {
-                  const { studentsClassesId } = props.rowData;
-                  const { field, gradeStructureId } = props.columnDef;
-                  return (
-                    <MTableCell {...props} className="custom-cell">
-                      <>
-                        <div className="cell-menu-wrapper">
-                          <CellMenu
-                            field={field}
-                            studentsClassesId={studentsClassesId}
-                            gradeStructureId={gradeStructureId}
-                            status={props.rowData[field + "Status"]}
-                            fetchRowsOnly={fetchRowsOnly}
-                          />
-                        </div>
-                        <Typography
-                          component="span"
-                          sx={{
-                            color: "text.secondary",
-                            fontSize: 13,
-                            textAlign: "left",
-                          }}
-                        >
-                          {props.rowData[field + "Status"]}
-                          {props.rowData[field + "Status"] === "Drafted" &&
-                            props.rowData[field + "Finalized"] && (
-                              <Typography
-                                sx={{
-                                  fontSize: 11,
-                                }}
-                              >
-                                Finalized: {props.rowData[field + "Finalized"]}
-                              </Typography>
-                            )}
-                        </Typography>
-                      </>
-                    </MTableCell>
-                  );
-                }
-              },
+              Cell: (props) => (
+                <CustomCell {...props} fetchRowsOnly={fetchRowsOnly} />
+              ),
               Toolbar: (props) => (
                 <>
                   <MTableToolbar {...props} />

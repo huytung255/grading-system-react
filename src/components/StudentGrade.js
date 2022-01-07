@@ -7,6 +7,7 @@ import { useState } from "react";
 const StudentGrade = ({ classId }) => {
   const [grades, setGrades] = useState([]);
   const [average, setAverage] = useState();
+  const [error, setError] = useState("");
   useEffect(() => {
     const fetchGrades = async () => {
       try {
@@ -17,6 +18,7 @@ const StudentGrade = ({ classId }) => {
         setAverage(averagePoint);
         const newGrades = res.data
           .slice(0, res.data.length - 1)
+          .filter((grade) => grade.finalizedGrade !== null)
           .map((grade, i) => {
             if (i === res.data.length - 1) {
               return;
@@ -31,7 +33,9 @@ const StudentGrade = ({ classId }) => {
           });
         setGrades(newGrades);
       } catch (error) {
-        console.log(error);
+        if (error.response) {
+          setError(error.response.data.message);
+        } else console.log(error);
       }
     };
 
@@ -94,7 +98,7 @@ const StudentGrade = ({ classId }) => {
               color: "text.secondary",
             }}
           >
-            Nothing here yet.
+            {error.length === 0 ? "Nothing here yet." : error}
           </Typography>
         </Paper>
       )}

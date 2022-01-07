@@ -64,7 +64,7 @@ const ReviewTable = ({ studentGradeId, role, data, setData }) => {
             >
               Created At
             </TableCell>
-            <TableCell align="left">
+            <TableCell component="th" scope="row">
               {new Date(data.createdAt).toDateString()}
             </TableCell>
           </TableRow>
@@ -77,7 +77,9 @@ const ReviewTable = ({ studentGradeId, role, data, setData }) => {
             >
               Expected grade
             </TableCell>
-            <TableCell align="left">{data.expectedGrade}</TableCell>
+            <TableCell component="th" scope="row">
+              {data.expectedGrade}
+            </TableCell>
           </TableRow>
 
           <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
@@ -89,7 +91,9 @@ const ReviewTable = ({ studentGradeId, role, data, setData }) => {
             >
               Explanation
             </TableCell>
-            <TableCell align="left">{data.explanation}</TableCell>
+            <TableCell component="th" scope="row">
+              {data.explanation}
+            </TableCell>
           </TableRow>
 
           <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
@@ -101,7 +105,7 @@ const ReviewTable = ({ studentGradeId, role, data, setData }) => {
             >
               Final decision
             </TableCell>
-            <TableCell align="left">
+            <TableCell component="th" scope="row">
               {isEditing ? (
                 <Stack
                   component="form"

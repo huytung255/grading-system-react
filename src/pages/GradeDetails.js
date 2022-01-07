@@ -11,8 +11,6 @@ import axiosClient from "../api/axiosClient";
 import { useDispatch } from "react-redux";
 import { setErrorMsg } from "../redux/alert";
 const GradeDetails = () => {
-  // const location = useLocation();
-  // const { role } = location.state;
   const { classId, studentGradeId } = useParams();
   const dispatch = useDispatch();
   const [role, setRole] = useState();

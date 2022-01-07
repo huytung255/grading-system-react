@@ -18,6 +18,7 @@ import EditGradeStructure from "./pages/EditGradeStructure";
 import GradeBoard from "./pages/GradeBoard";
 import GradeDetails from "./pages/GradeDetails";
 import StudentRequests from "./pages/StudentRequests";
+import StudentShortenedGrade from "./pages/StudentShortenedGrade";
 function App() {
   const theme = createTheme({
     palette: {
@@ -94,6 +95,14 @@ function App() {
             element={
               <RequireAuth>
                 <StudentRequests />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/class/:classId/studentGrades/:studentId"
+            element={
+              <RequireAuth>
+                <StudentShortenedGrade />
               </RequireAuth>
             }
           />

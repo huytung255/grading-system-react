@@ -64,7 +64,12 @@ const CellMenu = ({
       >
         <MenuItem
           onClick={handleFinalize}
-          disabled={status === "Finalized" || status === "New" || isFinalizing}
+          disabled={
+            status === "Finalized" ||
+            status === "New" ||
+            status === "Reviewed" ||
+            isFinalizing
+          }
         >
           <ListItemIcon>
             {isFinalizing ? <CircularProgress size={17} /> : <CheckIcon />}
