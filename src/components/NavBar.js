@@ -21,7 +21,7 @@ import {
 import { setIsAuthenticated } from "../redux/user";
 import { useDispatch } from "react-redux";
 import NavDrawer from "./NavDrawer";
-
+import Notifications from "./Notifications";
 const NavBar = () => {
   let navigate = useNavigate();
   const dispatch = useDispatch();
@@ -33,10 +33,10 @@ const NavBar = () => {
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   const signOut = () => {
     localStorage.clear();
     dispatch(setIsAuthenticated(false));
@@ -119,6 +119,7 @@ const NavBar = () => {
           <></>
         )}
 
+        <Notifications />
         <IconButton
           aria-label="account of current user"
           aria-controls="menu-appbar"
@@ -132,14 +133,10 @@ const NavBar = () => {
           id="menu-appbar"
           anchorEl={anchorEl}
           anchorOrigin={{
-            vertical: "top",
+            vertical: "bottom",
             horizontal: "right",
           }}
           keepMounted
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
