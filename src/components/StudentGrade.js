@@ -14,13 +14,14 @@ const StudentGrade = ({ classId }) => {
         const res = await axiosClient.get(
           `/api/classes/${classId}/student-grade`
         );
-        const { averagePoint } = res.data[res.data.length - 1];
+        const { scores } = res.data;
+        const { averagePoint } = scores[scores.length - 1];
         setAverage(averagePoint);
-        const newGrades = res.data
-          .slice(0, res.data.length - 1)
+        const newGrades = scores
+          .slice(0, scores.length - 1)
           .filter((grade) => grade.finalizedGrade !== null)
           .map((grade, i) => {
-            if (i === res.data.length - 1) {
+            if (i === scores.length - 1) {
               return;
             }
             const { finalizedGrade, gradeTitle, gradeReview, id } = grade;
@@ -31,6 +32,7 @@ const StudentGrade = ({ classId }) => {
               studentGradeId: id,
             };
           });
+        console.log(newGrades);
         setGrades(newGrades);
       } catch (error) {
         if (error.response) {

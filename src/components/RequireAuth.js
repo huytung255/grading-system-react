@@ -2,6 +2,7 @@ import React from "react";
 import { useLocation, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import NavBar from "./NavBar";
+import { Box } from "@mui/material";
 function RequireAuth({ children }) {
   const { isAuthenticated } = useSelector((state) => state.user);
   let location = useLocation();

@@ -57,11 +57,10 @@ const GradeEditor = ({
   };
   return (
     <Paper
-      variant="outlined"
+      //variant="outlined"
       sx={{
         p: 3,
         mb: 2,
-        bgcolor: "#fafafa",
       }}
       ref={provided.innerRef}
       {...provided.draggableProps}

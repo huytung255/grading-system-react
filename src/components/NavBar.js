@@ -6,6 +6,9 @@ import {
   Typography,
   MenuItem,
   Menu,
+  Switch,
+  FormGroup,
+  FormControlLabel,
 } from "@mui/material";
 import classNav from "../constants/classNav";
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -18,13 +21,15 @@ import {
   useParams,
   useNavigate,
 } from "react-router-dom";
-import { setIsAuthenticated } from "../redux/user";
-import { useDispatch } from "react-redux";
+import { setIsAuthenticated, switchTheme } from "../redux/user";
+import { useDispatch, useSelector } from "react-redux";
 import NavDrawer from "./NavDrawer";
 import Notifications from "./Notifications";
+
 const NavBar = () => {
   let navigate = useNavigate();
   const dispatch = useDispatch();
+  const { theme } = useSelector((state) => state.user);
   const location = useLocation();
   const { classId } = useParams();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -41,6 +46,10 @@ const NavBar = () => {
     localStorage.clear();
     dispatch(setIsAuthenticated(false));
     navigate("/sign-in");
+  };
+  const handleSwitchTheme = () => {
+    dispatch(switchTheme());
+    localStorage.setItem("theme", theme);
   };
   let match = matchPath("/class/:id/*", location.pathname.toString());
   if (match) {
@@ -140,13 +149,25 @@ const NavBar = () => {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleClose}>
+          <MenuItem onClick={() => navigate("/user-profile")}>
             <NavLink
               to="/user-profile"
               style={{ textDecoration: "none", color: "inherit" }}
             >
               Profile
             </NavLink>
+          </MenuItem>
+          <MenuItem>
+            <FormGroup>
+              <FormControlLabel
+                control={<Switch />}
+                label="Dark mode"
+                labelPlacement="start"
+                checked={theme === "dark"}
+                onChange={handleSwitchTheme}
+                sx={{ ml: 0 }}
+              />
+            </FormGroup>
           </MenuItem>
           <MenuItem onClick={signOut}>Sign out</MenuItem>
         </Menu>

@@ -100,7 +100,7 @@ input[type="number"] {
 } */
 .table-container table:first-child tr td:nth-child(2),
 .table-container table:first-child tr th:nth-child(2) {
-  background-color: #ffffff;
+  /* background-color: #ffffff; */
   background-clip: padding-box;
   position: sticky;
   left: 0px;
@@ -111,7 +111,7 @@ input[type="number"] {
   /* For tablets & desktop: */
   .table-container table:first-child tr td:first-child,
   .table-container table:first-child tr th:first-child {
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
     background-clip: padding-box;
     position: sticky;
     left: 0;
@@ -120,7 +120,7 @@ input[type="number"] {
 
   .table-container table:first-child tr td:nth-child(2),
   .table-container table:first-child tr th:nth-child(2) {
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
     background-clip: padding-box;
     position: sticky;
     left: 150px;

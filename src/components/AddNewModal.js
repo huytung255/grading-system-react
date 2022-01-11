@@ -76,7 +76,11 @@ const AddNewModal = ({
             borderRadius: 2,
           }}
         >
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, mb: 1 }}>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, mb: 1, color: "text.primary" }}
+          >
             {isEditing ? "Edit" : "Create"} class
           </Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -160,7 +164,7 @@ const AddNewModal = ({
                 variant="text"
                 onClick={onClose}
                 size="small"
-                color="inherit"
+                color="primary"
               >
                 Cancel
               </Button>

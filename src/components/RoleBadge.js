@@ -4,8 +4,9 @@ const RoleBadge = ({ role }) => {
   return (
     <Box
       sx={{
+        borderWidth: 0,
         position: "absolute",
-        color: "white",
+        color: "primary.main",
         fontWeight: "bold",
         fontSize: 10,
         padding: "1px 10px 1px 15px",
@@ -15,7 +16,7 @@ const RoleBadge = ({ role }) => {
         right: 0,
         zIndex: 2,
         "&::before": {
-          backgroundColor: "primary.main",
+          backgroundColor: "white",
           position: "absolute",
           content: '""',
           top: 0,

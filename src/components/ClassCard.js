@@ -8,10 +8,9 @@ const ClassCard = ({ name, section, id, role }) => {
       variant="outlined"
       sx={{
         borderRadius: 3,
-        borderWidth: 0,
-        borderLeftWidth: 10,
-        borderLeftColor: "primary.main",
-        bgcolor: "text.primary",
+        // borderLeftWidth: 10,
+        // borderLeftColor: "primary.main",
+        bgcolor: "primary.main",
         position: "relative",
       }}
     >

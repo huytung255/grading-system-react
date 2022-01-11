@@ -10,6 +10,7 @@ import "@fontsource/roboto/700.css";
 import "@fontsource/roboto/900.css";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+
 ReactDOM.render(
   <Provider store={store}>
     <App />

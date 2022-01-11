@@ -19,9 +19,13 @@ import GradeBoard from "./pages/GradeBoard";
 import GradeDetails from "./pages/GradeDetails";
 import StudentRequests from "./pages/StudentRequests";
 import StudentShortenedGrade from "./pages/StudentShortenedGrade";
+import CssBaseline from "@mui/material/CssBaseline";
+import { useSelector } from "react-redux";
 function App() {
-  const theme = createTheme({
+  const { theme } = useSelector((state) => state.user);
+  const customTheme = createTheme({
     palette: {
+      mode: theme,
       primary: {
         light: "#4fb3bf",
         main: "#00838f",
@@ -37,7 +41,8 @@ function App() {
     },
   });
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={customTheme}>
+      <CssBaseline />
       <ErrorSnackbar />
       <SuccessSnackbar />
       <BrowserRouter>
