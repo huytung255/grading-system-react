@@ -17,7 +17,7 @@ import { styled } from "@mui/material/styles";
 const LinkTextField = styled(TextField)(({ theme }) => ({
   "& .Mui-disabled": {
     background: theme.palette.primary.main,
-    WebkitTextFillColor: theme.palette.primary.contrastText,
+    WebkitTextFillColor: "#FFFFFF",
     borderRadius: 5,
     borderBottom: "none !important",
   },
@@ -61,7 +61,11 @@ const InviteLinkModal = ({ open, onClose, classId }) => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: 500,
+            width: {
+              xs: 350,
+              sm: 400,
+              md: 500,
+            },
             bgcolor: "background.paper",
             boxShadow: 24,
             px: 3,
@@ -73,20 +77,6 @@ const InviteLinkModal = ({ open, onClose, classId }) => {
             Invite teachers
           </Typography>
           <Stack direction="row" marginBottom={2}>
-            {/* <Paper
-              sx={{
-                overflowX: "scroll",
-                paddingLeft: 2,
-                backgroundColor: "secondary.dark",
-                color: "secondary.contrastText",
-                whiteSpace: "nowrap",
-                display: "flex",
-                alignItems: "center",
-              }}
-              elevation={0}
-            >
-              {inviteTeacher}
-            </Paper> */}
             <LinkTextField
               defaultValue={inviteTeacher}
               variant="filled"
@@ -115,20 +105,6 @@ const InviteLinkModal = ({ open, onClose, classId }) => {
             Invite students
           </Typography>
           <Stack direction="row" marginBottom={2}>
-            {/* <Paper
-              sx={{
-                overflowX: "scroll",
-                paddingLeft: 2,
-                backgroundColor: "secondary.dark",
-                color: "secondary.contrastText",
-                whiteSpace: "nowrap",
-                display: "flex",
-                alignItems: "center",
-              }}
-              elevation={0}
-            >
-              {inviteStudent}
-            </Paper> */}
             <LinkTextField
               defaultValue={inviteStudent}
               variant="filled"

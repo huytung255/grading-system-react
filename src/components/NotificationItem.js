@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { MenuItem, Stack, Typography } from "@mui/material";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import { convertToDateAndTime } from "../services/dateTimeServices";
+import axiosClient from "../api/axiosClient";
 const LINES_TO_SHOW = 3;
 
 // src: https://stackoverflow.com/a/13924997/8062659
@@ -15,15 +17,31 @@ const MultiLineEllipsis = styled(Typography)(({ theme }) => ({
   WebkitBoxOrient: "vertical",
 }));
 
-const NotificationItem = ({ isNew, content, createdAt, handleCloseNoti }) => {
+const NotificationItem = ({
+  id,
+  IsSeen,
+  content,
+  createdAt,
+  handleCloseNoti,
+  class_id,
+}) => {
   let navigate = useNavigate();
-  const handleItemClick = () => {
-    navigate("/class/1/feed");
-    handleCloseNoti();
+  const handleItemClick = async () => {
+    navigate(`/class/${class_id}/feed`);
+    try {
+      const res = await axiosClient.put("/api/notifications", {
+        id: id,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    //setIsSeen(true);
+    handleCloseNoti(id);
   };
+  const formattedDate = convertToDateAndTime(new Date(createdAt));
   return (
     <MenuItem sx={{ minHeight: 75 }} onClick={handleItemClick} divider>
-      {isNew ? (
+      {!IsSeen ? (
         <NotificationsActiveIcon sx={{ mr: 2 }} color="primary" />
       ) : (
         <NotificationsIcon
@@ -37,9 +55,9 @@ const NotificationItem = ({ isNew, content, createdAt, handleCloseNoti }) => {
           fontSize={13}
           sx={{
             fontWeight: "400",
-            wordBreak: "break-all",
+            wordBreak: "break-word",
             whiteSpace: "normal",
-            color: isNew ? "text.primary" : "text.secondary",
+            color: !IsSeen ? "text.primary" : "text.secondary",
             // overflow: "hidden",
             // textOverflow: "ellipsis",
             // lineClamp: 2,
@@ -52,10 +70,10 @@ const NotificationItem = ({ isNew, content, createdAt, handleCloseNoti }) => {
           sx={{
             wordBreak: "break-all",
             whiteSpace: "normal",
-            color: isNew ? "primary.main" : "text.secondary",
+            color: !IsSeen ? "primary.main" : "text.secondary",
           }}
         >
-          {createdAt}
+          {formattedDate}
         </Typography>
       </Stack>
     </MenuItem>

@@ -24,7 +24,7 @@ const GradeDetails = () => {
         );
         const { gradeReview, isTeacher, studentGrade } = res.data;
         const { studentsGrades, gradeTitle } =
-          studentGrade[0].classesGradeStructures[0];
+          studentGrade[0].classesGradeStructures;
         if (isTeacher) setRole("teacher");
         else setRole("student");
         setData({

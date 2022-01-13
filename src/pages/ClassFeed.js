@@ -157,7 +157,7 @@ const ClassFeed = () => {
               size="small"
               onClick={handleOpenEdit}
             >
-              <EditIcon />
+              <EditIcon sx={{ fill: "#FFFFFF" }} color="inherit" />
             </Button>
             <AddNewModal
               open={openEdit}

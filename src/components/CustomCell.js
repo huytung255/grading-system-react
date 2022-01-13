@@ -2,12 +2,19 @@ import React from "react";
 import { MTableCell } from "@material-table/core";
 import CellMenu from "./CellMenu";
 import { Typography, TableCell } from "@mui/material";
+import { useSelector } from "react-redux";
+import { styled } from "@mui/system";
+const StickyCell = styled(MTableCell)(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
+}));
 const CustomCell = ({ fetchRowsOnly, ...props }) => {
+  const { theme } = useSelector((state) => state.user);
   const { field } = props.columnDef;
   const { name } = props.rowData;
 
-  if (field === "studentId" || field === "name" || field === "average")
-    return <MTableCell {...props} />;
+  if (field === "average") return <MTableCell {...props} />;
+  if (field === "studentId" || field === "name")
+    return <StickyCell {...props} />;
   else if (name === "Class average")
     return (
       <TableCell className="column-average">

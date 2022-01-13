@@ -44,7 +44,7 @@ const GradeStructure = ({ classId, role }) => {
         sx={{
           fontSize: 17,
           fontWeight: 700,
-          color: "secondary.main",
+          color: "text.primary",
         }}
       >
         Grade Structure
@@ -57,7 +57,7 @@ const GradeStructure = ({ classId, role }) => {
             sx={{
               fontSize: 15,
               fontWeight: 500,
-              color: "secondary.main",
+              color: "text.primary",
               width: "100%",
             }}
           >
@@ -67,7 +67,7 @@ const GradeStructure = ({ classId, role }) => {
             sx={{
               fontSize: 15,
               fontWeight: 500,
-              color: "secondary.main",
+              color: "text.primary",
             }}
           >
             {gradeStructure.reduce(
@@ -84,7 +84,7 @@ const GradeStructure = ({ classId, role }) => {
             sx={{
               fontSize: 14,
               fontWeight: 500,
-              color: "secondary.main",
+              color: "text.primary",
               width: "100%",
             }}
           >
@@ -94,7 +94,7 @@ const GradeStructure = ({ classId, role }) => {
             sx={{
               fontSize: 14,
               fontWeight: 500,
-              color: "secondary.main",
+              color: "text.primary",
             }}
           >
             {grade.percentage}

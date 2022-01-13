@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import classNav from "../constants/classNav";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axiosClient from "../api/axiosClient";
 import {
   NavLink,
@@ -49,8 +49,10 @@ const NavBar = () => {
   };
   const handleSwitchTheme = () => {
     dispatch(switchTheme());
-    localStorage.setItem("theme", theme);
   };
+  useEffect(() => {
+    localStorage.setItem("theme", theme);
+  }, [theme]);
   let match = matchPath("/class/:id/*", location.pathname.toString());
   if (match) {
     (async function () {

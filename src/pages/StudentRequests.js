@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { setErrorMsg } from "../redux/alert";
 import { useDispatch } from "react-redux";
 import axiosClient from "../api/axiosClient";
+import { convertToDateAndTime } from "../services/dateTimeServices";
 const StudentRequests = () => {
   const { classId } = useParams();
   const [requests, setRequests] = useState([]);
@@ -27,7 +28,7 @@ const StudentRequests = () => {
             studentId,
             name,
             gradeComposition: gradeTitle,
-            createdAt: new Date(createdAt).toDateString(),
+            createdAt: convertToDateAndTime(new Date(createdAt)),
             studentGradeId,
           };
         });

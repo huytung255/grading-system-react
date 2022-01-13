@@ -11,6 +11,9 @@ import {
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import NotificationItem from "./NotificationItem";
 import { useRef } from "react";
+import axiosClient from "../api/axiosClient";
+import { setErrorMsg } from "../redux/alert";
+import { useDispatch } from "react-redux";
 const dummyNoti = {
   isNew: true,
   content: "Your Midterm grade has been marked by a teacher in New Class",
@@ -26,61 +29,74 @@ const dummyFetch = () => {
   });
 };
 const Notifications = () => {
+  const dispatch = useDispatch();
   const progressRef = useRef();
   const [anchorElNoti, setAnchorElNoti] = useState(null);
   const [shouldLoadMore, setShouldLoadMore] = useState(true);
+  const [page, setPage] = useState(0);
+  const [isNew, setIsNew] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [list, setList] = useState([]);
   const handleNoti = (event) => {
     setAnchorElNoti(event.currentTarget);
   };
-  const handleCloseNoti = () => {
+  const handleCloseNoti = (id) => {
     setAnchorElNoti(null);
-    setList((prev) => {
-      const newList = prev.map(({ content, createdAt }) => ({
-        isNew: false,
-        content,
-        createdAt,
-      }));
-      return newList;
+    const newList = list.map(({ IsSeen, ...rest }) => {
+      if (rest.id === id)
+        return {
+          IsSeen: true,
+          ...rest,
+        };
+      return { IsSeen, ...rest };
     });
+    setList(newList);
   };
   const scrollToBottom = () => {
     progressRef.current.scrollIntoView({ behavior: "smooth" });
   };
-  const fetchMore = async () => {
+  const fetch = async () => {
     setIsLoading(true);
-    const res = await dummyFetch();
-    setList([...list, ...res]);
+    try {
+      const res = await axiosClient.get(`/api/notifications?page=${page}`);
+      setPage((prev) => prev + 1);
+      const { rows } = res.data.notifications;
+      if (rows.length === 0) setShouldLoadMore(false);
+      setList([...list, ...rows]);
+    } catch (error) {
+      console.log(error);
+      if (error.response) {
+        dispatch(setErrorMsg(error.response.data.message));
+      } else console.log(error);
+    }
     setIsLoading(false);
   };
   const handleScroll = (e) => {
     const bottom =
       e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-    if (bottom && shouldLoadMore) {
-      fetchMore();
+    if (bottom && shouldLoadMore && !isLoading) {
+      fetch();
     }
   };
+
+  useEffect(() => {
+    fetch();
+  }, []);
   useEffect(() => {
     if (isLoading === true) scrollToBottom();
   }, [isLoading]);
   useEffect(() => {
-    if (list.length === 15) setShouldLoadMore(false);
+    if (list.some((e) => e.IsSeen === false)) {
+      setIsNew(true);
+    } else setIsNew(false);
   }, [list]);
-  useEffect(() => {
-    const fetch = async () => {
-      setIsLoading(true);
-      const res = await dummyFetch();
-      setList([...res]);
-      setIsLoading(false);
-    };
+  // useEffect(() => {
 
-    fetch();
-  }, []);
+  // }, [list]);
   return (
     <>
       <IconButton color="inherit" onClick={handleNoti}>
-        <Badge variant="dot" color="error">
+        <Badge variant="dot" color="error" invisible={!isNew}>
           <NotificationsIcon />
         </Badge>
       </IconButton>
@@ -95,7 +111,7 @@ const Notifications = () => {
         onClose={handleCloseNoti}
         PaperProps={{
           style: {
-            height: 400,
+            height: 375,
             width: 300,
           },
           onScroll: handleScroll,

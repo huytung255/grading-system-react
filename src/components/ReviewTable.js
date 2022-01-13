@@ -17,6 +17,7 @@ import { Controller, useForm } from "react-hook-form";
 import axiosClient from "../api/axiosClient";
 import { useDispatch } from "react-redux";
 import { setErrorMsg, setSuccessMsg } from "../redux/alert";
+import { convertToDateAndTime } from "../services/dateTimeServices";
 const ReviewTable = ({ studentGradeId, role, data, setData }) => {
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
@@ -65,7 +66,7 @@ const ReviewTable = ({ studentGradeId, role, data, setData }) => {
               Created At
             </TableCell>
             <TableCell component="th" scope="row">
-              {new Date(data.createdAt).toDateString()}
+              {convertToDateAndTime(new Date(data.createdAt))}
             </TableCell>
           </TableRow>
           <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
