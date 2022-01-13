@@ -6,6 +6,8 @@ import {
   Box,
   MenuItem,
   Typography,
+  ListItemIcon,
+  ListItemText,
   CircularProgress,
 } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -14,6 +16,7 @@ import { useRef } from "react";
 import axiosClient from "../api/axiosClient";
 import { setErrorMsg } from "../redux/alert";
 import { useDispatch } from "react-redux";
+import RefreshIcon from "@mui/icons-material/Refresh";
 const dummyNoti = {
   isNew: true,
   content: "Your Midterm grade has been marked by a teacher in New Class",
@@ -78,13 +81,30 @@ const Notifications = () => {
       fetch();
     }
   };
-
+  const handleRefresh = async () => {
+    setIsLoading(true);
+    setPage(0);
+    setShouldLoadMore(true);
+    try {
+      const res = await axiosClient.get(`/api/notifications?page=0`);
+      setPage((prev) => prev + 1);
+      const { rows } = res.data.notifications;
+      if (rows.length === 0) setShouldLoadMore(false);
+      setList([...rows]);
+    } catch (error) {
+      console.log(error);
+      if (error.response) {
+        dispatch(setErrorMsg(error.response.data.message));
+      } else console.log(error);
+    }
+    setIsLoading(false);
+  };
   useEffect(() => {
     fetch();
   }, []);
-  useEffect(() => {
-    if (isLoading === true) scrollToBottom();
-  }, [isLoading]);
+  // useEffect(() => {
+  //   if (isLoading === true) scrollToBottom();
+  // }, [isLoading]);
   useEffect(() => {
     if (list.some((e) => e.IsSeen === false)) {
       setIsNew(true);
@@ -123,8 +143,8 @@ const Notifications = () => {
             justifyContent: "center",
             fontSize: 14,
           }}
-          disabled
           divider
+          disabled
         >
           Notifications
         </MenuItem>
@@ -156,6 +176,13 @@ const Notifications = () => {
             <CircularProgress color="primary" size={20} />
           </Box>
         )}
+        <IconButton
+          size="small"
+          sx={{ position: "absolute", top: 4, right: 10 }}
+          onClick={handleRefresh}
+        >
+          <RefreshIcon />
+        </IconButton>
       </Menu>
     </>
   );
