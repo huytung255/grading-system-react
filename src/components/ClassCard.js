@@ -10,7 +10,7 @@ const ClassCard = ({ name, section, id, role }) => {
         borderRadius: 3,
         // borderLeftWidth: 10,
         // borderLeftColor: "primary.main",
-        bgcolor: "primary.main",
+        bgcolor: role === "student" ? "primary.main" : "primary.dark",
         position: "relative",
       }}
     >

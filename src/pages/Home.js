@@ -7,10 +7,13 @@ import AddNewModal from "../components/AddNewModal";
 import ClassCard from "../components/ClassCard";
 import { setErrorMsg } from "../redux/alert";
 import { useDispatch } from "react-redux";
+import DropdownMenu from "../components/DropdownMenu";
 const Home = () => {
   const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
   const [classes, setClasses] = useState([]);
+  const [filter, setFilter] = useState("none");
+  // const [filteredClasses, setFilteredClasses] = useState([]);
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
   async function fetchAPI() {
@@ -26,6 +29,15 @@ const Home = () => {
   useEffect(() => {
     fetchAPI();
   }, []);
+  // useEffect(() => {
+  //   if (filter === "none") setFilteredClasses([...classes]);
+  //   else {
+  //     setFilteredClasses((prev) => {
+  //       const filtered = prev.filter((c) => c.role === filter);
+  //       return filtered;
+  //     });
+  //   }
+  // }, [filter]);
   return (
     <Box mt={3}>
       <Container maxWidth="xl">
@@ -35,9 +47,11 @@ const Home = () => {
             disableElevation={true}
             startIcon={<AddIcon />}
             onClick={handleOpen}
+            sx={{ mb: 2 }}
           >
             Add new
           </Button>
+          <DropdownMenu filter={filter} setFilter={setFilter} />
         </Box>
         <AddNewModal
           open={openModal}
@@ -45,6 +59,7 @@ const Home = () => {
           fetchAPI={fetchAPI}
           isEditing={false}
         />
+
         <Grid container spacing={2}>
           {classes.map((classItem) => {
             const {
@@ -55,16 +70,18 @@ const Home = () => {
               room,
               usersclasses: { role },
             } = classItem;
-            return (
-              <Grid item xs={12} md={3} key={id}>
-                <ClassCard
-                  name={className}
-                  section={classSection}
-                  id={id}
-                  role={role}
-                />
-              </Grid>
-            );
+            if (filter === "none" || filter === role)
+              return (
+                <Grid item xs={12} md={3} key={id}>
+                  <ClassCard
+                    name={className}
+                    section={classSection}
+                    id={id}
+                    role={role}
+                  />
+                </Grid>
+              );
+            return <></>;
           })}
         </Grid>
       </Container>
