@@ -30,7 +30,7 @@ const GradeStructure = ({ classId, role }) => {
   }
   useEffect(() => {
     fetchAPI();
-  }, []);
+  }, [classId]);
   return (
     <Paper
       sx={{

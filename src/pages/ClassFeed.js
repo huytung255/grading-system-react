@@ -70,7 +70,7 @@ const ClassFeed = () => {
   }
   useEffect(() => {
     fetchAPI();
-  }, []);
+  }, [classId]);
   return (
     <Container
       sx={{

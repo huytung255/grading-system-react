@@ -42,7 +42,7 @@ const StudentGrade = ({ classId }) => {
     };
 
     fetchGrades();
-  }, []);
+  }, [classId]);
   return (
     <Box>
       <Typography
