@@ -73,6 +73,7 @@ const DropdownMenu = ({ filter, setFilter }) => {
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         variant="outlined"
+        size="small"
         disableElevation
         onClick={handleClick}
         endIcon={<KeyboardArrowDownIcon />}
