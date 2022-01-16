@@ -23,9 +23,7 @@ axiosClient.interceptors.response.use(
       localStorage.clear();
       window.location.href = "/sign-in";
     }
-    if (status === 403) {
-      window.location.href = "/";
-    }
+
     return Promise.reject(error);
   }
 );

@@ -27,7 +27,9 @@ import GradeStructure from "../components/ClassFeed/GradeStructure";
 import StudentGrade from "../components/ClassFeed/StudentGrade";
 import TeacherShortcut from "../components/ClassFeed/TeacherShortcut";
 import InviteCodeModal from "../components/Modals/InviteCodeModal";
+import { useNavigate } from "react-router-dom";
 const ClassFeed = () => {
+  const navigate = useNavigate();
   const { classId } = useParams();
   const dispatch = useDispatch();
   const [role, setRole] = useState();
@@ -68,8 +70,9 @@ const ClassFeed = () => {
         room: room,
       });
     } catch (error) {
-      // console.log(error);
-      if (error.response) {
+      if (error.response.data.message) {
+        if (error.response.data.message === "You are not allowed!")
+          navigate("/");
         dispatch(setErrorMsg(error.response.data.message));
       } else console.log(error);
     }
