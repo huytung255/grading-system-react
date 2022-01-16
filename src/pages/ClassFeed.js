@@ -13,18 +13,20 @@ import {
 } from "@mui/material";
 import LinkIcon from "@mui/icons-material/Link";
 import EmailIcon from "@mui/icons-material/Email";
-import InviteLinkModal from "../components/InviteLinkModal";
-import InviteByEmailModal from "../components/InviteByEmailModal";
+import CodeIcon from "@mui/icons-material/Code";
+import InviteLinkModal from "../components/Modals/InviteLinkModal";
+import InviteByEmailModal from "../components/Modals/InviteByEmailModal";
 import { setErrorMsg } from "../redux/alert";
 import { useDispatch } from "react-redux";
 import axiosClient from "../api/axiosClient";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AddNewModal from "../components/AddNewModal";
-import DeleteModal from "../components/DeleteModal";
-import GradeStructure from "../components/GradeStructure";
-import StudentGrade from "../components/StudentGrade";
-import TeacherShortcut from "../components/TeacherShortcut";
+import AddNewModal from "../components/Modals/AddNewModal";
+import DeleteModal from "../components/Modals/DeleteModal";
+import GradeStructure from "../components/ClassFeed/GradeStructure";
+import StudentGrade from "../components/ClassFeed/StudentGrade";
+import TeacherShortcut from "../components/ClassFeed/TeacherShortcut";
+import InviteCodeModal from "../components/Modals/InviteCodeModal";
 const ClassFeed = () => {
   const { classId } = useParams();
   const dispatch = useDispatch();
@@ -37,12 +39,16 @@ const ClassFeed = () => {
   });
 
   const [openInviteLink, setOpenInviteLink] = useState(false);
+  const [openInviteCode, setOpenInviteCode] = useState(false);
   const [openInviteByEmail, setOpenInviteByEmail] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
 
+  //model handlers
   const handleOpenInviteLink = () => setOpenInviteLink(true);
   const handleCloseInviteLink = () => setOpenInviteLink(false);
+  const handleOpenInviteCode = () => setOpenInviteCode(true);
+  const handleCloseInviteCode = () => setOpenInviteCode(false);
   const handleOpenInviteByEmail = () => setOpenInviteByEmail(true);
   const handleCloseInviteByEmail = () => setOpenInviteByEmail(false);
   const handleOpenEdit = () => setOpenEdit(true);
@@ -199,6 +205,14 @@ const ClassFeed = () => {
                 Invite Link
               </Button>
               <Button
+                startIcon={<CodeIcon />}
+                sx={{ width: "100%", fontWeight: 500, mb: 1 }}
+                variant="contained"
+                onClick={handleOpenInviteCode}
+              >
+                Invite Code
+              </Button>
+              <Button
                 startIcon={<EmailIcon />}
                 sx={{ width: "100%", fontWeight: 500 }}
                 variant="contained"
@@ -209,6 +223,11 @@ const ClassFeed = () => {
               <InviteLinkModal
                 open={openInviteLink}
                 onClose={handleCloseInviteLink}
+                classId={classId}
+              />
+              <InviteCodeModal
+                open={openInviteCode}
+                onClose={handleCloseInviteCode}
                 classId={classId}
               />
               <InviteByEmailModal

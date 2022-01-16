@@ -4,8 +4,8 @@ import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-import { convertToDateAndTime } from "../services/dateTimeServices";
-import axiosClient from "../api/axiosClient";
+import { convertToDateAndTime } from "../../services/dateTimeServices";
+import axiosClient from "../../api/axiosClient";
 const LINES_TO_SHOW = 3;
 
 // src: https://stackoverflow.com/a/13924997/8062659

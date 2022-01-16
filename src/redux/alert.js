@@ -19,12 +19,12 @@ export const alertSlice = createSlice({
       state.isSuccess = action.payload;
     },
     setErrorMsg: (state, action) => {
-      state.errorMsg = action.payload;
+      state.errorMsg = action.payload.toString();
       state.errorKey = new Date().getTime();
       state.isError = true;
     },
     setSuccessMsg: (state, action) => {
-      state.successMsg = action.payload;
+      state.successMsg = action.payload.toString();
       state.errorKey = new Date().getTime();
       state.isSuccess = true;
     },

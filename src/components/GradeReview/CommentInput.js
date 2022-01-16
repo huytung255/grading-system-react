@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Avatar, IconButton, Stack, TextField } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import LoadingButton from "@mui/lab/LoadingButton";
-import axiosClient from "../api/axiosClient";
-import { setErrorMsg, setSuccessMsg } from "../redux/alert";
+import axiosClient from "../../api/axiosClient";
+import { setErrorMsg, setSuccessMsg } from "../../redux/alert";
 import { useDispatch, useSelector } from "react-redux";
 const CommentInput = ({ setComments, gradeReviewId }) => {
   const dispatch = useDispatch();

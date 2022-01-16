@@ -1,6 +1,6 @@
 import { Avatar, Stack, Typography, Box } from "@mui/material";
 import React from "react";
-import { convertToDateAndTime } from "../services/dateTimeServices";
+import { convertToDateAndTime } from "../../services/dateTimeServices";
 const Comment = ({ name, image, content, createdAt }) => {
   const formattedDate = convertToDateAndTime(new Date(createdAt));
   return (

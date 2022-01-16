@@ -3,7 +3,7 @@ import { Paper, Box, Typography, Button } from "@mui/material";
 import GradingIcon from "@mui/icons-material/Grading";
 import CheckIcon from "@mui/icons-material/Check";
 import { Link } from "react-router-dom";
-import ReviewModal from "./ReviewModal";
+import ReviewModal from "../Modals/ReviewModal";
 const Grade = ({
   classId,
   studentGradeId,

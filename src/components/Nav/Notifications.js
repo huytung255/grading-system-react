@@ -13,8 +13,8 @@ import {
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import NotificationItem from "./NotificationItem";
 import { useRef } from "react";
-import axiosClient from "../api/axiosClient";
-import { setErrorMsg } from "../redux/alert";
+import axiosClient from "../../api/axiosClient";
+import { setErrorMsg } from "../../redux/alert";
 import { useDispatch } from "react-redux";
 import RefreshIcon from "@mui/icons-material/Refresh";
 const dummyNoti = {

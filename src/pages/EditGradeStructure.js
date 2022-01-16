@@ -5,7 +5,7 @@ import { useState } from "react";
 import SaveIcon from "@mui/icons-material/Save";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import GradeEditor from "../components/GradeEditor";
+import GradeEditor from "../components/ClassFeed/GradeEditor";
 import axiosClient from "../api/axiosClient";
 import { useDispatch } from "react-redux";
 import { setErrorMsg, setSuccessMsg } from "../redux/alert";

@@ -1,8 +1,8 @@
 import { Modal, Typography, Box, Stack, Button, Fade } from "@mui/material";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setErrorMsg, setSuccessMsg } from "../redux/alert";
-import axiosClient from "../api/axiosClient";
+import { setErrorMsg, setSuccessMsg } from "../../redux/alert";
+import axiosClient from "../../api/axiosClient";
 import { useNavigate } from "react-router";
 import LoadingButton from "@mui/lab/LoadingButton";
 const DeleteModal = ({ open, onClose, classId }) => {

@@ -11,7 +11,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { useDispatch } from "react-redux";
 import { setIsAuthenticated, setToken, setUserId } from "../redux/user";
 import { useNavigate, useLocation, NavLink } from "react-router-dom";
-import SocialAuth from "../components/SocialAuth";
+import SocialAuth from "../components/Authentication/SocialAuth";
 import MyDivider from "../components/MyDivider";
 import { setErrorMsg, setSuccessMsg } from "../redux/alert";
 import axiosClient from "../api/axiosClient";

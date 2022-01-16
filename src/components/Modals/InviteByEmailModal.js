@@ -9,8 +9,8 @@ import {
   Chip,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import axiosClient from "../api/axiosClient";
-import { setErrorMsg, setSuccessMsg } from "../redux/alert";
+import axiosClient from "../../api/axiosClient";
+import { setErrorMsg, setSuccessMsg } from "../../redux/alert";
 import { useDispatch } from "react-redux";
 import LoadingButton from "@mui/lab/LoadingButton";
 const InviteByEmailModal = ({ open, onClose, preSelectedTarget, classId }) => {

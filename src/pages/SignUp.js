@@ -8,7 +8,7 @@ import {
   Container,
 } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
-import SocialAuth from "../components/SocialAuth";
+import SocialAuth from "../components/Authentication/SocialAuth";
 import MyDivider from "../components/MyDivider";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";

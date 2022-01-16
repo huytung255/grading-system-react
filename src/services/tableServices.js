@@ -1,4 +1,4 @@
-import ColumnHeaderMenu from "../components/ColumnHeaderMenu";
+import ColumnHeaderMenu from "../components/Table/ColumnHeaderMenu";
 export const processRows = (resData, setData) => {
   const { allStudent, studentGrades, averagePoint } = resData;
   const newData = allStudent.map((student, index) => {

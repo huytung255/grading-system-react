@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
-import InviteByEmailModal from "../components/InviteByEmailModal";
+import InviteByEmailModal from "../components/Modals/InviteByEmailModal";
 import { setErrorMsg } from "../redux/alert";
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";

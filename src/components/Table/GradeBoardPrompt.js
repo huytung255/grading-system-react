@@ -4,8 +4,8 @@ import { styled } from "@mui/material/styles";
 import DownloadIcon from "@mui/icons-material/Download";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
-import axiosClient from "../api/axiosClient";
-import { setErrorMsg, setSuccessMsg } from "../redux/alert";
+import axiosClient from "../../api/axiosClient";
+import { setErrorMsg, setSuccessMsg } from "../../redux/alert";
 import { useDispatch } from "react-redux";
 const Input = styled("input")({
   display: "none",

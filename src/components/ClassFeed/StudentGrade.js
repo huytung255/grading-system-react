@@ -2,8 +2,9 @@ import React, { useEffect } from "react";
 import Grade from "./Grade";
 import { Paper, Box, Typography } from "@mui/material";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
-import axiosClient from "../api/axiosClient";
+import axiosClient from "../../api/axiosClient";
 import { useState } from "react";
+import EmptyIndicator from "../EmptyIndicator";
 const StudentGrade = ({ classId }) => {
   const [grades, setGrades] = useState([]);
   const [average, setAverage] = useState();
@@ -78,31 +79,9 @@ const StudentGrade = ({ classId }) => {
           })}
         </>
       ) : (
-        <Paper
-          sx={{
-            width: "100%",
-            pt: 2,
-            pl: 2,
-            pb: 2,
-            pr: 2,
-            mb: 1,
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "column",
-          }}
-          variant="outlined"
-          elevation={0}
-        >
-          <PriorityHighIcon sx={{ color: "primary.main" }} color="inherit" />
-          <Typography
-            sx={{
-              fontSize: 14,
-              color: "text.secondary",
-            }}
-          >
-            {error.length === 0 ? "Nothing here yet." : error}
-          </Typography>
-        </Paper>
+        <EmptyIndicator
+          msg={error.length === 0 ? "Nothing here yet." : error}
+        />
       )}
     </Box>
   );

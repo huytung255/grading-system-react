@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import axiosClient from "../api/axiosClient";
+import axiosClient from "../../api/axiosClient";
 const CellMenu = ({
   field,
   studentsClassesId,

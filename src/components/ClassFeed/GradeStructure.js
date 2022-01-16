@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Paper, Stack, Typography, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
-import axiosClient from "../api/axiosClient";
-import { setErrorMsg } from "../redux/alert";
+import axiosClient from "../../api/axiosClient";
+import { setErrorMsg } from "../../redux/alert";
 import { useDispatch } from "react-redux";
+import EmptyIndicator from "../EmptyIndicator";
 const GradeStructure = ({ classId, role }) => {
   const [gradeStructure, setGradeStructure] = useState([]);
   const dispatch = useDispatch();
@@ -50,7 +51,7 @@ const GradeStructure = ({ classId, role }) => {
         Grade Structure
       </Typography>
       {gradeStructure.length === 0 ? (
-        <></>
+        <EmptyIndicator />
       ) : (
         <Stack direction="row" marginBottom={1}>
           <Typography
@@ -108,9 +109,9 @@ const GradeStructure = ({ classId, role }) => {
           fullWidth
           variant="text"
           startIcon={<EditIcon />}
-          sx={{
-            mt: 1,
-          }}
+          // sx={{
+          //   mt: 1,
+          // }}
         >
           Edit
         </Button>

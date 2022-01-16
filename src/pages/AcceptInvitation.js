@@ -21,6 +21,7 @@ const AcceptInvitation = () => {
     } catch (error) {
       if (error.response) {
         dispatch(setErrorMsg(error.response.data.message));
+        navigate("/");
       } else console.log(error);
     }
   }
@@ -30,7 +31,7 @@ const AcceptInvitation = () => {
     const sjc = query.get("sjc");
     if (tjc) {
       joinClass(classId, "tjc", tjc);
-    } else if (sjc) {
+    } else {
       joinClass(classId, "sjc", sjc);
     }
   }, []);

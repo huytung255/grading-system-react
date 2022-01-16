@@ -1,7 +1,7 @@
 import React from "react";
 import { Snackbar, Alert } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
-import { setIsError, resetError } from "../redux/alert";
+import { setIsError, resetError } from "../../redux/alert";
 const MyAlert = React.forwardRef(function MyAlert(props, ref) {
   return <Alert elevation={6} ref={ref} variant="filled" {...props} />;
 });

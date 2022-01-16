@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
-import classNav from "../constants/classNav";
+import classNav from "../../constants/classNav";
 import React, { useState } from "react";
 const NavDrawer = ({ classId, isTeacher }) => {
   const [openDrawer, setOpenDrawer] = useState(false);

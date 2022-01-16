@@ -10,8 +10,8 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
-import EditProfileModal from "../components/EditProfileModal";
-import ChangePasswordModal from "../components/ChangePasswordModal";
+import EditProfileModal from "../components/Modals/EditProfileModal";
+import ChangePasswordModal from "../components/Modals/ChangePasswordModal";
 import { setErrorMsg, setSuccessMsg } from "../redux/alert";
 import { useDispatch } from "react-redux";
 import axiosClient from "../api/axiosClient";

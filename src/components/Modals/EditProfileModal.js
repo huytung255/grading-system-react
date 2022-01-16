@@ -9,8 +9,8 @@ import {
 } from "@mui/material";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import axiosClient from "../api/axiosClient";
-import { setErrorMsg, setSuccessMsg } from "../redux/alert";
+import axiosClient from "../../api/axiosClient";
+import { setErrorMsg, setSuccessMsg } from "../../redux/alert";
 import { useDispatch } from "react-redux";
 const EditProfileModal = ({
   open,

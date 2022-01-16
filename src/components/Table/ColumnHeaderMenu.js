@@ -9,12 +9,12 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import axiosClient from "../api/axiosClient";
+import axiosClient from "../../api/axiosClient";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch } from "react-redux";
-import { setErrorMsg, setSuccessMsg } from "../redux/alert";
+import { setErrorMsg, setSuccessMsg } from "../../redux/alert";
 import CheckIcon from "@mui/icons-material/Check";
 const Input = styled("input")({
   display: "none",

@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useLayoutEffect, useRef } from "react";
 import { Paper, Stack, TextField } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import axiosClient from "../api/axiosClient";
+import axiosClient from "../../api/axiosClient";
 import { useDispatch } from "react-redux";
-import { setErrorMsg } from "../redux/alert";
+import { setErrorMsg } from "../../redux/alert";
 import LoadingButton from "@mui/lab/LoadingButton";
 const GradeEditor = ({
   grade,

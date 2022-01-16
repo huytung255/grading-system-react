@@ -1,35 +1,26 @@
-import {
-  Container,
-  Button,
-  Stack,
-  Avatar,
-  Typography,
-  TableCell,
-} from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Container, Button, Stack, Avatar, Typography } from "@mui/material";
+
 import React, { useEffect, useState } from "react";
 import MaterialTable, {
-  MTableCell,
   MTableToolbar,
   MTableEditField,
 } from "@material-table/core";
 import { Navigate, useParams } from "react-router-dom";
 import { ExportCsv, ExportPdf } from "@material-table/exporters";
-import CellMenu from "../components/CellMenu";
 
-import GradeBoardPrompt from "../components/GradeBoardPrompt";
+import GradeBoardPrompt from "../components/Table/GradeBoardPrompt";
 import DownloadIcon from "@mui/icons-material/Download";
 
 import axiosClient from "../api/axiosClient";
 import useUpdateEffect from "../hooks/useUpdateEffect";
 import { useDispatch } from "react-redux";
-import { setErrorMsg, setSuccessMsg } from "../redux/alert";
+
 import {
   refreshColumns,
   processColumns,
   processRows,
 } from "../services/tableServices";
-import CustomCell from "../components/CustomCell";
+import CustomCell from "../components/Table/CustomCell";
 const GradeBoard = () => {
   const dispatch = useDispatch();
   const { classId } = useParams();

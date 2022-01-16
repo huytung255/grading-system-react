@@ -7,35 +7,44 @@ import {
   Button,
   Fade,
 } from "@mui/material";
-import React from "react";
+import LoadingButton from "@mui/lab/LoadingButton";
+import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import axiosClient from "../../api/axiosClient";
+import { setErrorMsg, setSuccessMsg } from "../../redux/alert";
 import { useDispatch } from "react-redux";
-import { setErrorMsg, setSuccessMsg } from "../redux/alert";
-import axiosClient from "../api/axiosClient";
-const ChangePasswordModal = ({ open, onClose }) => {
+const ReviewModal = ({
+  open,
+  onClose,
+  classId,
+  studentGradeId,
+  setIsRequested,
+}) => {
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const {
     handleSubmit,
     control,
     formState: { errors, isValid },
   } = useForm({ mode: "all" });
   const onSubmit = async (data) => {
-    if (data.newPassword !== data.confirmNewPassword) {
-      dispatch(setErrorMsg("Password and confirm password does not match."));
-    } else {
-      try {
-        const res = await axiosClient.post("/api/users/change-password", {
-          oldPassword: data.oldPassword,
-          password: data.newPassword,
-          confirmPassword: data.confirmNewPassword,
-        });
-        dispatch(setSuccessMsg(res.data.message));
-        onClose();
-      } catch (error) {
-        if (error.response) {
-          dispatch(setErrorMsg(error.response.data));
-        } else console.log(error);
-      }
+    try {
+      let res;
+      setLoading(true);
+      res = await axiosClient.post("/api/grade-review", {
+        studentGrade_Id: studentGradeId,
+        expectedGrade: data.expectedGrade,
+        studentExplanation: data.explanation,
+      });
+      setLoading(false);
+      setIsRequested(true);
+      dispatch(setSuccessMsg("Grade review is requested."));
+      onClose();
+    } catch (error) {
+      setLoading(false);
+      if (error.response) {
+        dispatch(setErrorMsg(error.response.data));
+      } else console.log(error);
     }
   };
 
@@ -61,22 +70,23 @@ const ChangePasswordModal = ({ open, onClose }) => {
           }}
         >
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, mb: 1 }}>
-            Change Password
+            Request review
           </Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Controller
-              name="oldPassword"
+              name="expectedGrade"
               control={control}
-              defaultValue=""
+              defaultValue={0}
               shouldUnregister={true}
-              rules={{ required: true }}
+              rules={{ required: true, pattern: "[0-9]" }}
               render={({ field }) => {
                 return (
                   <TextField
-                    error={!!errors.oldPassword}
-                    type="password"
+                    InputLabelProps={{ shrink: true }}
+                    error={!!errors.expectedGrade}
+                    type="number"
                     variant="outlined"
-                    label="Old Password"
+                    label="Expected grade"
                     fullWidth={true}
                     margin="dense"
                     required={true}
@@ -86,40 +96,17 @@ const ChangePasswordModal = ({ open, onClose }) => {
               }}
             />
             <Controller
-              name="newPassword"
+              name="explanation"
               control={control}
-              defaultValue=""
-              shouldUnregister={true}
-              rules={{ required: true, minLength: 8 }}
-              render={({ field }) => {
-                return (
-                  <TextField
-                    error={!!errors.newPassword}
-                    helperText="Password must be at least 8 characters."
-                    type="password"
-                    variant="outlined"
-                    label="New Password"
-                    fullWidth={true}
-                    margin="dense"
-                    required={true}
-                    {...field}
-                  />
-                );
-              }}
-            />
-            <Controller
-              name="confirmNewPassword"
-              control={control}
-              defaultValue=""
+              defaultValue={""}
               shouldUnregister={true}
               rules={{ required: true }}
               render={({ field }) => {
                 return (
                   <TextField
-                    error={!!errors.confirmNewPassword}
-                    type="password"
+                    error={!!errors.name}
                     variant="outlined"
-                    label="Confirm New Password"
+                    label="Explanation"
                     fullWidth={true}
                     margin="dense"
                     required={true}
@@ -130,14 +117,15 @@ const ChangePasswordModal = ({ open, onClose }) => {
             />
 
             <Stack direction="row-reverse" spacing={2} sx={{ mt: 3 }}>
-              <Button
-                disabled={!isValid}
+              <LoadingButton
+                type="submit"
+                loading={loading}
                 variant="text"
                 size="small"
-                type="submit"
+                disabled={!isValid}
               >
-                Change
-              </Button>
+                Request
+              </LoadingButton>
               <Button
                 variant="text"
                 onClick={onClose}
@@ -154,4 +142,4 @@ const ChangePasswordModal = ({ open, onClose }) => {
   );
 };
 
-export default ChangePasswordModal;
+export default ReviewModal;

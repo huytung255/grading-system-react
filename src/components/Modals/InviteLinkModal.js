@@ -6,28 +6,14 @@ import {
   Fade,
   IconButton,
   TextField,
+  Tooltip,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import axiosClient from "../api/axiosClient";
+import axiosClient from "../../api/axiosClient";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import { setErrorMsg } from "../redux/alert";
+import { setErrorMsg } from "../../redux/alert";
 import { useDispatch } from "react-redux";
 
-import { styled } from "@mui/material/styles";
-const LinkTextField = styled(TextField)(({ theme }) => ({
-  "& .Mui-disabled": {
-    background: theme.palette.primary.main,
-    WebkitTextFillColor: "#FFFFFF",
-    borderRadius: 5,
-    borderBottom: "none !important",
-  },
-  "& .Mui-disabled::after": {
-    borderBottom: "none !important",
-  },
-  "& .Mui-disabled::before": {
-    borderBottom: "none !important",
-  },
-}));
 const InviteLinkModal = ({ open, onClose, classId }) => {
   const dispatch = useDispatch();
   const [inviteStudent, setInviteStudent] = useState("");
@@ -77,12 +63,7 @@ const InviteLinkModal = ({ open, onClose, classId }) => {
             Invite teachers
           </Typography>
           <Stack direction="row" marginBottom={2}>
-            <LinkTextField
-              defaultValue={inviteTeacher}
-              variant="filled"
-              fullWidth
-              disabled
-            />
+            <TextField variant="outlined" fullWidth value={inviteTeacher} />
             <Box
               sx={{
                 ml: 1,
@@ -91,26 +72,23 @@ const InviteLinkModal = ({ open, onClose, classId }) => {
                 alignItems: "center",
               }}
             >
-              <IconButton
-                color="primary"
-                onClick={() => {
-                  navigator.clipboard.writeText(inviteTeacher);
-                }}
-              >
-                <ContentCopyIcon />
-              </IconButton>
+              <Tooltip title="Copy">
+                <IconButton
+                  color="primary"
+                  onClick={() => {
+                    navigator.clipboard.writeText(inviteTeacher);
+                  }}
+                >
+                  <ContentCopyIcon />
+                </IconButton>
+              </Tooltip>
             </Box>
           </Stack>
           <Typography sx={{ flexGrow: 1, fontWeight: 500 }}>
             Invite students
           </Typography>
           <Stack direction="row" marginBottom={2}>
-            <LinkTextField
-              defaultValue={inviteStudent}
-              variant="filled"
-              fullWidth
-              disabled
-            />
+            <TextField variant="outlined" fullWidth value={inviteStudent} />
             <Box
               sx={{
                 ml: 1,
@@ -119,14 +97,16 @@ const InviteLinkModal = ({ open, onClose, classId }) => {
                 alignItems: "center",
               }}
             >
-              <IconButton
-                color="primary"
-                onClick={() => {
-                  navigator.clipboard.writeText(inviteStudent);
-                }}
-              >
-                <ContentCopyIcon />
-              </IconButton>
+              <Tooltip title="Copy">
+                <IconButton
+                  color="primary"
+                  onClick={() => {
+                    navigator.clipboard.writeText(inviteStudent);
+                  }}
+                >
+                  <ContentCopyIcon />
+                </IconButton>
+              </Tooltip>
             </Box>
           </Stack>
         </Box>

@@ -10,10 +10,10 @@ import {
   FormGroup,
   FormControlLabel,
 } from "@mui/material";
-import classNav from "../constants/classNav";
+import classNav from "../../constants/classNav";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import React, { useEffect, useState } from "react";
-import axiosClient from "../api/axiosClient";
+import axiosClient from "../../api/axiosClient";
 import {
   NavLink,
   matchPath,
@@ -21,7 +21,7 @@ import {
   useParams,
   useNavigate,
 } from "react-router-dom";
-import { setIsAuthenticated, switchTheme } from "../redux/user";
+import { setIsAuthenticated, switchTheme } from "../../redux/user";
 import { useDispatch, useSelector } from "react-redux";
 import NavDrawer from "./NavDrawer";
 import Notifications from "./Notifications";

@@ -2,7 +2,7 @@ import React from "react";
 import { Box, IconButton } from "@mui/material";
 import { createSvgIcon } from "@mui/material/utils";
 import { useDispatch } from "react-redux";
-import { setIsAuthenticated, setToken, setUserId } from "../redux/user";
+import { setIsAuthenticated, setToken, setUserId } from "../../redux/user";
 import { useNavigate } from "react-router-dom";
 const GoogleIcon = createSvgIcon(
   <>
