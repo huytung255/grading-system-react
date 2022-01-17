@@ -10,6 +10,7 @@ import { setErrorMsg } from "../redux/alert";
 import { useDispatch } from "react-redux";
 import DropdownMenu from "../components/DropdownMenu";
 import JoinByCodeModal from "../components/Modals/JoinByCodeModal";
+import EmptyIndicator from "../components/EmptyIndicator";
 const Home = () => {
   const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
@@ -81,6 +82,13 @@ const Home = () => {
         />
         <JoinByCodeModal open={openJoin} onClose={handleCloseJoin} />
         <Grid container spacing={2}>
+          {classes.length === 0 && (
+            <Grid item container justifyContent="center" xs={12}>
+              <Box sx={{ width: 300 }}>
+                <EmptyIndicator />
+              </Box>
+            </Grid>
+          )}
           {classes.map((classItem) => {
             const {
               id,
