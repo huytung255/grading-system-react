@@ -41,15 +41,15 @@ const CommentInput = ({ setComments, gradeReviewId }) => {
         gradeReviewId: gradeReviewId,
         content: comment,
       });
-      const { content, createdAt } = res.data;
+      // const { content, createdAt } = res.data;
       setComment("");
       setComments((prev) => {
         const newComments = [...prev];
         newComments.push({
           name: userInfo.name,
           image: userInfo.image,
-          content,
-          createdAt,
+          content: comment,
+          createdAt: new Date().toString(),
         });
         return newComments;
       });

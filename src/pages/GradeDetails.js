@@ -23,8 +23,8 @@ const GradeDetails = () => {
           `/api/grade-review?studentGrade_Id=${studentGradeId}&classId=${classId}`
         );
         const { gradeReview, isTeacher, studentGrade } = res.data;
-        const { studentsGrades, gradeTitle } =
-          studentGrade[0].classesGradeStructures;
+        const { studentsgrades, gradeTitle } =
+          studentGrade[0].classesgradestructures;
         if (isTeacher) setRole("teacher");
         else setRole("student");
         setData({
@@ -35,15 +35,15 @@ const GradeDetails = () => {
           expectedGrade: gradeReview[0].expectedGrade,
           explanation: gradeReview[0].studentExplanation,
           gradeComposition: gradeTitle,
-          finalizedGrade: studentsGrades.finalizedGrade,
-          finalDecision: studentsGrades.isFinalDecision
-            ? studentsGrades.finalizedGrade
+          finalizedGrade: studentsgrades.finalizedGrade,
+          finalDecision: studentsgrades.isFinalDecision
+            ? studentsgrades.finalizedGrade
             : null,
         });
         //Skip if there's no comments
-        if (gradeReview[0].GradeReviewComments.createdAt) {
-          const newComments = gradeReview.map(({ GradeReviewComments }, _) => {
-            const { user, content, createdAt } = GradeReviewComments;
+        if (gradeReview[0].gradereviewcomments.createdAt) {
+          const newComments = gradeReview.map(({ gradereviewcomments }, _) => {
+            const { user, content, createdAt } = gradereviewcomments;
             const { name, image } = user;
             return { name, image, content, createdAt };
           });

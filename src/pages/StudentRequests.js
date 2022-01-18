@@ -18,12 +18,13 @@ const StudentRequests = () => {
         const res = await axiosClient.get("/api/grade-review/" + classId);
         const newRequests = res.data.map((request, i) => {
           const {
-            ["studentsClasses.fullName"]: name,
-            ["studentsClasses.student_id"]: studentId,
-            ["studentsClasses.studentsGrades.id"]: studentGradeId,
+            ["studentsclasses.fullName"]: name,
+            ["studentsclasses.student_id"]: studentId,
+            ["studentsclasses.studentsgrades.id"]: studentGradeId,
             gradeTitle,
-            createdAt,
+            gradeReview,
           } = request;
+          const { createdAt } = gradeReview;
           return {
             studentId,
             name,
